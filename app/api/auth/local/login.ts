@@ -1,0 +1,1 @@
+import { NextResponse } from 'next/server'; export async function POST(req){ const { email, pass } = await req.json(); if(email===process.env.ADMIN_EMAIL && pass===process.env.ADMIN_PASSWORD) return NextResponse.json({ok:true}); return NextResponse.json({ok:false}); }

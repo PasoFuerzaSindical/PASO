@@ -1,0 +1,1 @@
+export default function Dash(){return <div>Admin dashboard</div>}
