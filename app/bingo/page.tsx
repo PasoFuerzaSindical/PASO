@@ -1,1 +1,0 @@
-export default function Bingo(){return <div>Bingo mock</div>}

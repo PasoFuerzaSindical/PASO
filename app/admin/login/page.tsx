@@ -1,3 +1,0 @@
-'use client'
-import {useState} from 'react'
-export default function Login(){const [e,setE]=useState('');const [p,setP]=useState('');async function s(ev){ev.preventDefault();const r=await fetch('/api/auth/local/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:e,pass:p})});const j=await r.json();if(j.ok)location.href='/admin/dashboard';else alert('fail')}return (<form onSubmit={s}><input value={e} onChange={ev=>setE(ev.target.value)} placeholder='email'/><input type='password' value={p} onChange={ev=>setP(ev.target.value)} placeholder='pass'/><button>Entrar</button></form>)}
