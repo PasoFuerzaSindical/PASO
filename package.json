@@ -15,16 +15,19 @@
     "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+
     "tailwindcss": "^3.4.1",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
+
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2"
-  },
-  "devDependencies": {
+    "jsonwebtoken": "^9.0.2",
+
     "typescript": "^5.3.3",
-    "prisma": "^5.10.0",
     "@types/react": "^18.2.21",
     "@types/node": "^20.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.10.0"
   }
 }
