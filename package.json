@@ -10,23 +10,21 @@
     "prisma:migrate": "prisma migrate deploy"
   },
   "dependencies": {
+    "@neondatabase/serverless": "1.0.0",
     "@prisma/client": "^5.10.0",
-    "bcryptjs": "^2.4.3",
     "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "jsonwebtoken": "^9.0.0",
-    "zod": "^3.22.4",
-    "lucide-react": "^0.344.0",
-    "framer-motion": "^10.18.0"
+    "typescript": "^5.3.3",
+    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "next-auth": "^4.24.7"
   },
   "devDependencies": {
     "prisma": "^5.10.0",
-    "typescript": "^5.3.3",
-    "@types/react": "^18.2.75",
-    "@types/react-dom": "^18.2.23",
-    "tailwindcss": "^3.4.1",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.32"
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@types/node": "^20.11.0"
   }
 }
