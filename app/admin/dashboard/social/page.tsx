@@ -1,0 +1,1 @@
+export default function Page(){return <div>Admin: social generator (mock)</div>}

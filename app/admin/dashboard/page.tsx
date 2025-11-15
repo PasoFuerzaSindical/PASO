@@ -1,0 +1,1 @@
+export default function Dash(){ return (<div><h2>Admin dashboard</h2><ul><li><a href='/admin/dashboard/social'>Generador RRSS</a></li><li><a href='/admin/dashboard/posters'>Posters</a></li><li><a href='/admin/dashboard/bingo'>Bingo logs</a></li></ul></div>) }

@@ -1,0 +1,1 @@
+export default function Footer(){ return <footer className='py-6 text-sm text-gray-400'>P.A.S.O. ©</footer> }

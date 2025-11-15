@@ -1,0 +1,1 @@
+export default function Page(){return <div>Admin: bingo logs (mock)</div>}
