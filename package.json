@@ -21,6 +21,7 @@
     "postcss": "^8.4.32",
     "next-auth": "^4.24.7",
     "bcryptjs": "^2.4.3"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "prisma": "^5.10.0",
