@@ -87,7 +87,7 @@ const initialPosterState: PosterState = {
     },
     footerLine3: {
         id: 'footer3',
-        text: 'Una iniciativa de UGT',
+        text: 'Una iniciativa de Los de Siempre',
         fontSize: 12,
         color: '#16a34a',
     },
