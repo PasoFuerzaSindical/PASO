@@ -1,4 +1,5 @@
 
+
 import { GoogleGenAI, Type, GenerateContentResponse, Chat } from "@google/genai";
 import { SurrealConsultationResult, CampaignPost, PosterContent, DiplomaContent, AcronymGeneratorResult, SimulatorTurnResult } from '../lib/types';
 import { CampaignPhase, getSystemInstructionForPhase } from '../lib/campaignGems';

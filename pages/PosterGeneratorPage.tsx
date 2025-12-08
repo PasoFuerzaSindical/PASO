@@ -455,7 +455,7 @@ const PosterGeneratorPage: React.FC = () => {
                 </CardFooter>
             </Card>
 
-            <div className="flex items-center justify-center p-4 bg-secondary/30 rounded-lg relative z-[50] overflow-hidden">
+            <div className="flex items-center justify-center p-4 bg-secondary/30 rounded-lg relative z-[50] overflow-x-auto">
                 <div
                     ref={posterRef}
                     style={{ backgroundColor: posterState.backgroundColor }}
