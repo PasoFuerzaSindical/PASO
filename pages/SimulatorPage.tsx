@@ -71,13 +71,12 @@ const SimulatorPage: React.FC = () => {
     }, [messages]);
 
     return (
-        // Changed to w-full and removed max-w limits to use full screen width
-        // Adjusted height calculation to account for smaller padding in MainLayout (Header 4rem + Padding 1rem approx = 5rem)
-        <div className="w-full h-[calc(100vh-5rem)] flex flex-col gap-2">
+        // Usamos flex-1 para llenar el espacio restante del MainLayout (que es flex-col)
+        // min-h-0 es crítico para que el scroll interno funcione dentro de un flex child
+        <div className="flex-1 flex flex-col gap-2 w-full min-h-0">
             <div className="flex flex-col lg:flex-row gap-2 h-full min-h-0">
                 
                 {/* LEFT PANEL: STATUS */}
-                {/* Changed to lg:w-1/2 (50%) to give maximum horizontal space for text */}
                 <Card className="lg:w-1/2 flex flex-col h-full overflow-hidden shadow-xl shrink-0 min-h-0">
                     <CardHeader className="flex-shrink-0 bg-secondary/20 border-b border-border py-3">
                         <CardTitle className="flex items-center gap-2 text-lg">
@@ -169,7 +168,6 @@ const SimulatorPage: React.FC = () => {
                 </Card>
 
                 {/* RIGHT PANEL: CHAT */}
-                {/* Also 50% width on large screens */}
                 <Card className="flex-1 lg:w-1/2 flex flex-col h-[60vh] lg:h-full relative overflow-hidden shadow-xl min-w-0">
                     <CardHeader className="flex-shrink-0 bg-secondary/20 border-b border-border py-3">
                         <div className="flex items-center justify-between">
