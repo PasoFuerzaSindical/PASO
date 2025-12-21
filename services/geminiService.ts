@@ -4,7 +4,16 @@ import { GoogleGenAI, Type, GenerateContentResponse, Chat } from "@google/genai"
 import { SurrealConsultationResult, CampaignPost, PosterContent, DiplomaContent, AcronymGeneratorResult, SimulatorTurnResult } from '../lib/types';
 import { CampaignPhase, getSystemInstructionForPhase } from '../lib/campaignGems';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Get API key from Vite environment variables
+// In development: uses .env.local with VITE_GEMINI_API_KEY
+// In production: uses build-time injected value from vite.config.ts
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (import.meta.env.MODE === 'production' ? (window as any).__GEMINI_API_KEY__ : '');
+
+if (!apiKey) {
+    console.error('❌ No API key found. Please set VITE_GEMINI_API_KEY in your .env.local file');
+}
+
+const ai = new GoogleGenAI({ apiKey });
 
 // Helper function to generate images using free Pollinations.ai API
 async function generateImageWithPollinations(prompt: string): Promise<string> {
