@@ -73,7 +73,7 @@ export const handleSurrealConsultation = async (queryOrAudio: string, campaignPh
             }
         });
 
-        let contents: any[];
+        let contents: any;
         if (isAudio) {
             contents = [
                 {
@@ -87,10 +87,11 @@ export const handleSurrealConsultation = async (queryOrAudio: string, campaignPh
                 }
             ];
         } else {
-            contents = [{ text: `Aquí está la consulta del sanitario: "${queryOrAudio}"` }];
+            // For simple text queries, pass the string directly or a simple Part object
+            contents = `Aquí está la consulta del sanitario: "${queryOrAudio}"`;
         }
 
-        const result = await model.generateContent({ contents });
+        const result = await model.generateContent(contents);
         const textResponse = result.response.text();
         const payload = JSON.parse(textResponse);
 
@@ -280,14 +281,17 @@ export const generateCreativeAcronyms = async (
             generationConfig: { responseMimeType: "application/json", responseSchema }
         });
 
-        let contents: any[];
+        let contents: any;
         if (inputType === 'image') {
-            contents = [{ inlineData: { mimeType: 'image/jpeg', data: inputData } }, { text: "Genera 5 significados para P.A.S.O. basados en esta imagen." }];
+            contents = [
+                { inlineData: { mimeType: 'image/jpeg', data: inputData } },
+                { text: "Genera 5 significados para P.A.S.O. basados en esta imagen." }
+            ];
         } else {
-            contents = [{ text: `Genera 5 significados para P.A.S.O. basados en: ${inputData}` }];
+            contents = `Genera 5 significados para P.A.S.O. basados en: ${inputData}`;
         }
 
-        const result = await model.generateContent({ contents });
+        const result = await model.generateContent(contents);
         return JSON.parse(result.response.text());
     } catch (error) {
         console.error("Error in generateCreativeAcronyms:", error);
