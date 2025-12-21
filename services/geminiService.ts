@@ -44,9 +44,9 @@ async function generateImageWithPollinations(prompt: string): Promise<string> {
     }
 }
 
-// Usamos Gemini Pro para asegurar compatibilidad con la versión actual del SDK
-const textModel = 'gemini-pro';
-const imageModel = 'imagen-3.0-generate-001';
+// Usamos Gemini 1.5 Flash para respuestas rápidas y gratuitas.
+const textModel = 'gemini-1.5-flash';
+const imageModel = 'imagen-3';
 
 interface SurrealConsultationPayload {
     consultationText: string;
