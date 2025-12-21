@@ -107,9 +107,9 @@ export const handleSurrealConsultation = async (queryOrAudio: string, campaignPh
             imageB64: imageB64,
         };
 
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error in handleSurrealConsultation:", error);
-        throw new Error("Failed to get surreal consultation from AI.");
+        throw new Error(`Failed to get surreal consultation from AI: ${error.message || error}`);
     }
 };
 
