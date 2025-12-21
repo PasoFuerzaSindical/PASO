@@ -6,6 +6,37 @@ import { CampaignPhase, getSystemInstructionForPhase } from '../lib/campaignGems
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+// Helper function to generate images using free Pollinations.ai API
+async function generateImageWithPollinations(prompt: string): Promise<string> {
+    try {
+        // Pollinations.ai generates images via URL
+        // We need to fetch the image and convert to base64
+        const encodedPrompt = encodeURIComponent(prompt);
+        const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&nologo=true`;
+
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64 = reader.result as string;
+                // Remove the data URL prefix to get just the base64 string
+                const base64Data = base64.split(',')[1];
+                resolve(base64Data);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    } catch (error) {
+        console.error("Error in generateImageWithPollinations:", error);
+        throw error;
+    }
+}
+
 // Actualizado a Gemini 3 Pro para mejor razonamiento y manejo del tono irónico
 const textModel = 'gemini-3-pro-preview';
 const imageModel = 'imagen-4.0-generate-001';
@@ -66,17 +97,29 @@ export const handleSurrealConsultation = async (queryOrAudio: string, campaignPh
 
         const payload: SurrealConsultationPayload = JSON.parse(textResponse.text);
 
-        const imageResponse = await ai.models.generateImages({
-            model: imageModel,
-            prompt: payload.imagePrompt,
-            config: {
-                numberOfImages: 1,
-                outputMimeType: 'image/jpeg',
-                aspectRatio: '1:1',
+        // Try to generate image, but use free alternative if it fails (e.g., billing not enabled)
+        let imageB64 = '';
+        try {
+            const imageResponse = await ai.models.generateImages({
+                model: imageModel,
+                prompt: payload.imagePrompt,
+                config: {
+                    numberOfImages: 1,
+                    outputMimeType: 'image/jpeg',
+                    aspectRatio: '1:1',
+                }
+            });
+            imageB64 = imageResponse.generatedImages[0].image.imageBytes;
+        } catch (imageError: any) {
+            console.warn("Imagen API failed (likely billing not enabled), trying free alternative (Pollinations.ai):", imageError.message);
+            try {
+                imageB64 = await generateImageWithPollinations(payload.imagePrompt);
+            } catch (pollinationsError) {
+                console.error("Pollinations.ai also failed, using placeholder:", pollinationsError);
+                // Create a simple placeholder image (1x1 transparent pixel in base64)
+                imageB64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
             }
-        });
-
-        const imageB64 = imageResponse.generatedImages[0].image.imageBytes;
+        }
 
         return {
             text: payload.consultationText,
@@ -101,15 +144,15 @@ export const generateSocialPost = async (options: { platform: string; tone: stri
 
         let systemInstruction = getSystemInstructionForPhase(campaignPhase);
         let imagePromptAdditions = `Estilo: surrealismo digital, paleta de colores oscuros.`;
-        
+
         const isIntriguePhase = campaignPhase === 'Llegada';
 
         if (!isIntriguePhase) {
-             systemInstruction += ` La campaña está respaldada por UGT, por lo que puedes incluir sutilmente su logo o colores corporativos (rojo #E30613, verde #16a34a) si es apropiado, pero el tono principal debe ser el de P.A.S.O.`;
-             imagePromptAdditions = `Estilo: surrealismo digital, paleta de colores oscuros con acentos del rojo corporativo de UGT (#E30613) y un verde profesional y fresco (#16a34a).`;
+            systemInstruction += ` La campaña está respaldada por UGT, por lo que puedes incluir sutilmente su logo o colores corporativos (rojo #E30613, verde #16a34a) si es apropiado, pero el tono principal debe ser el de P.A.S.O.`;
+            imagePromptAdditions = `Estilo: surrealismo digital, paleta de colores oscuros con acentos del rojo corporativo de UGT (#E30613) y un verde profesional y fresco (#16a34a).`;
         } else {
-             systemInstruction += ` IMPORTANTE: En la fase de 'Llegada' (Intriga), NO debe aparecer ninguna referencia, logo, color o mención a UGT. El misterio es absoluto.`;
-             imagePromptAdditions = `Estilo: surrealismo digital, paleta de colores oscuros y neutros. Evita el color rojo brillante o verde para no dar pistas.`;
+            systemInstruction += ` IMPORTANTE: En la fase de 'Llegada' (Intriga), NO debe aparecer ninguna referencia, logo, color o mención a UGT. El misterio es absoluto.`;
+            imagePromptAdditions = `Estilo: surrealismo digital, paleta de colores oscuros y neutros. Evita el color rojo brillante o verde para no dar pistas.`;
         }
 
 
@@ -125,7 +168,7 @@ export const generateSocialPost = async (options: { platform: string; tone: stri
         2. El texto completo de la publicación, adaptado a la longitud y estilo de la plataforma.
         3. Un prompt de imagen muy detallado, conceptual y surrealista para acompañar la publicación.
         `;
-        
+
         const responseSchema = {
             type: Type.OBJECT,
             properties: {
@@ -156,17 +199,29 @@ export const generateSocialPost = async (options: { platform: string; tone: stri
 
         const payload: GenerateSocialPostPayload = JSON.parse(textResponse.text);
 
-        const imageResponse = await ai.models.generateImages({
-            model: imageModel,
-            prompt: `${imagePromptAdditions} ${payload.imagePrompt}`,
-            config: {
-                numberOfImages: 1,
-                outputMimeType: 'image/jpeg',
-                aspectRatio: '1:1',
-            },
-        });
-
-        const imageB64 = imageResponse.generatedImages[0].image.imageBytes;
+        // Try to generate image, but use free alternative if it fails (e.g., billing not enabled)
+        let imageB64 = '';
+        try {
+            const imageResponse = await ai.models.generateImages({
+                model: imageModel,
+                prompt: `${imagePromptAdditions} ${payload.imagePrompt}`,
+                config: {
+                    numberOfImages: 1,
+                    outputMimeType: 'image/jpeg',
+                    aspectRatio: '1:1',
+                },
+            });
+            imageB64 = imageResponse.generatedImages[0].image.imageBytes;
+        } catch (imageError: any) {
+            console.warn("Imagen API failed (likely billing not enabled), trying free alternative (Pollinations.ai):", imageError.message);
+            try {
+                imageB64 = await generateImageWithPollinations(`${imagePromptAdditions} ${payload.imagePrompt}`);
+            } catch (pollinationsError) {
+                console.error("Pollinations.ai also failed, using placeholder:", pollinationsError);
+                // Create a simple placeholder image (1x1 transparent pixel in base64)
+                imageB64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+            }
+        }
 
         return {
             platform,
@@ -245,9 +300,9 @@ export const generateBingoPhrases = async (theme: string, campaignPhase: Campaig
                 responseSchema,
             }
         });
-        
+
         const result: { phrases: string[] } = JSON.parse(response.text);
-        
+
         if (!result.phrases || result.phrases.length < 16) {
             throw new Error("AI returned an insufficient number of phrases.");
         }
@@ -294,31 +349,31 @@ export const generateDiplomaContent = async (theme: string, campaignPhase: Campa
 };
 
 export const generateCreativeAcronyms = async (
-    inputData: string, 
-    inputType: 'text' | 'image', 
+    inputData: string,
+    inputType: 'text' | 'image',
     campaignPhase: CampaignPhase
 ): Promise<AcronymGeneratorResult> => {
     try {
         const baseInstruction = `Eres el especialista en branding de guerrilla de P.A.S.O. Tu especialidad es crear significados recursivos, irónicos y mordaces para el acrónimo P.A.S.O. (siempre P.A.S.O., 4 letras) basados en situaciones laborales sanitarias.`;
         const systemInstruction = `${getSystemInstructionForPhase(campaignPhase)}\n\n${baseInstruction}`;
-        
+
         let prompt = "";
         let contents: any = "";
 
         if (inputType === 'image') {
             prompt = "Analiza esta imagen. Identifica qué situación precaria, absurda o cansada del ámbito sanitario representa. Basándote en ese análisis visual, genera 5 posibles significados para el acrónimo P.A.S.O. que describan la situación con ironía y humor negro. Incluye también una breve explicación de por qué has elegido esos acrónimos basándote en la imagen.";
             // inputData here is base64
-             contents = {
+            contents = {
                 parts: [
-                  {
-                    inlineData: {
-                      mimeType: 'image/jpeg', 
-                      data: inputData, 
+                    {
+                        inlineData: {
+                            mimeType: 'image/jpeg',
+                            data: inputData,
+                        },
                     },
-                  },
-                  {
-                    text: prompt,
-                  },
+                    {
+                        text: prompt,
+                    },
                 ],
             };
         } else {
@@ -363,7 +418,7 @@ export const generateCreativeAcronyms = async (
 // --- MANAGER SIMULATOR LOGIC ---
 
 export const initManagerChat = (objective: string = "Conseguir un día de libre disposición (moscoso)", campaignPhase: CampaignPhase = 'Llegada'): Chat => {
-    
+
     // Only explicitly mention UGT in the prompt if we are in the Revelation phase.
     const isRevelacion = campaignPhase === 'Revelacion';
     const unionKeywords = isRevelacion ? "'SINDICATO', 'UGT', 'DELEGADO SINDICAL'" : "'SINDICATO', 'DELEGADO SINDICAL'";
@@ -430,7 +485,7 @@ export const initManagerChat = (objective: string = "Conseguir un día de libre 
             }
         }
     });
-    
+
     return chat;
 };
 
