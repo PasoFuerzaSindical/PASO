@@ -13,6 +13,20 @@ if (!apiKey) {
 // Inicializar el SDK oficial
 const genAI = new GoogleGenerativeAI(apiKey || "");
 
+// Configurar ajustes de seguridad permisivos para el tono irónico/sarcástico
+import { HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
+
+const safetySettings = [
+    {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+    {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+];
+
 // Helper function to generate images using free Pollinations.ai API
 async function generateImageWithPollinations(prompt: string): Promise<string> {
     try {
@@ -70,7 +84,8 @@ export const handleSurrealConsultation = async (queryOrAudio: string, campaignPh
             generationConfig: {
                 responseMimeType: "application/json",
                 responseSchema: responseSchema,
-            }
+            },
+            safetySettings: safetySettings,
         });
 
         let contents: any;
