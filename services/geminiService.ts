@@ -5,12 +5,10 @@ import { SurrealConsultationResult, CampaignPost, PosterContent, DiplomaContent,
 import { CampaignPhase, getSystemInstructionForPhase } from '../lib/campaignGems';
 
 // Get API key from Vite environment variables
-// In development: uses .env.local with VITE_GEMINI_API_KEY
-// In production: uses build-time injected value from vite.config.ts
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (import.meta.env.MODE === 'production' ? (window as any).__GEMINI_API_KEY__ : '');
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY || (window as any).__GEMINI_API_KEY__;
 
 if (!apiKey) {
-    console.error('❌ No API key found. Please set VITE_GEMINI_API_KEY in your .env.local file');
+    console.error('❌ No API key found. Please set VITE_GEMINI_API_KEY in your Vercel/Environment variables.');
 }
 
 const ai = new GoogleGenAI({ apiKey });
@@ -46,9 +44,9 @@ async function generateImageWithPollinations(prompt: string): Promise<string> {
     }
 }
 
-// Actualizado a Gemini 3 Pro para mejor razonamiento y manejo del tono irónico
-const textModel = 'gemini-3-pro-preview';
-const imageModel = 'imagen-4.0-generate-001';
+// Usamos Gemini 1.5 Flash para respuestas rápidas y gratuitas, o 1.5 Pro si se prefiere más inteligencia.
+const textModel = 'gemini-1.5-flash';
+const imageModel = 'imagen-3.0-generate-001';
 
 interface SurrealConsultationPayload {
     consultationText: string;
