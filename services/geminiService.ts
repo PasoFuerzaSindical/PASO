@@ -56,7 +56,7 @@ async function generateImageWithPollinations(prompt: string): Promise<string> {
 }
 
 // Modelos estables
-const textModelName = 'gemini-1.5-flash';
+const textModelName = 'gemini-1.5-flash-latest';
 
 export const handleSurrealConsultation = async (queryOrAudio: string, campaignPhase: CampaignPhase, isAudio: boolean = false): Promise<SurrealConsultationResult> => {
     try {
