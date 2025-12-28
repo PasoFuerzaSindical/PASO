@@ -1,229 +1,282 @@
-<!DOCTYPE html>
-<!-- Build: 2025-12-21 19:21 - Force cache invalidation -->
-<html lang="es" class="dark">
 
+<!DOCTYPE html>
+<html lang="es" class="dark">
 <head>
   <meta charset="UTF-8" />
-  <!-- Favicon removed - add custom icon if needed -->
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>P.A.S.O. Campaign Hub</title>
-  <!-- Tailwind CSS is now installed via npm instead of CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Import JetBrains Mono for Terminal Look -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* CSS VARIABLES FOR THEMING */
-    :root {
-      /* Light Mode (Sterile Hospital) */
-      --background: #ffffff;
-      --foreground: #0f172a;
-      --card: rgba(255, 255, 255, 0.8);
-      --card-foreground: #0f172a;
-      --popover: #ffffff;
-      --popover-foreground: #0f172a;
-      --primary: #16a34a;
-      --primary-foreground: #ffffff;
-      --secondary: #f1f5f9;
-      --secondary-foreground: #0f172a;
-      --muted: #f1f5f9;
-      --muted-foreground: #64748b;
-      --accent: #f1f5f9;
-      --accent-foreground: #0f172a;
-      --destructive: #ef4444;
-      --destructive-foreground: #ffffff;
-      --border: #e2e8f0;
-      --input: #e2e8f0;
-      --ring: #16a34a;
-
-      --ugt-red: #E30613;
-      --ugt-green: #16a34a;
-      --cyber-violet: #9333ea;
-    }
-
-    .dark {
-      /* Dark Mode (Cyberpunk Bunker) */
-      --background: #050505;
-      --foreground: #e0e0e0;
-      --card: rgba(20, 20, 20, 0.6);
-      --card-foreground: #e0e0e0;
-      --popover: #0a0a0a;
-      --popover-foreground: #e0e0e0;
-      --primary: #0aff60;
-      --primary-foreground: #000000;
-      --secondary: rgba(255, 255, 255, 0.05);
-      --secondary-foreground: #e0e0e0;
-      --muted: rgba(255, 255, 255, 0.05);
-      --muted-foreground: #a0a0a0;
-      --accent: #b957ce;
-      --accent-foreground: #ffffff;
-      --destructive: #ff0f4b;
-      --destructive-foreground: #ffffff;
-      --border: rgba(255, 255, 255, 0.1);
-      --input: rgba(255, 255, 255, 0.1);
-      --ring: #0aff60;
-
-      --ugt-red: #ff0f4b;
-      /* Neon Crimson */
-      --ugt-green: #0aff60;
-      /* Toxic Acid */
-      --cyber-violet: #b957ce;
-      /* Mystic Accent */
-    }
-
-    body {
-      background-color: var(--background);
-      color: var(--foreground);
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--muted-foreground);
-      border-radius: 3px;
-      opacity: 0.3;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--ugt-green);
-    }
-
-    /* CRT Scanline Effect - ONLY VISIBLE IN DARK MODE */
-    .crt-lines {
-      background: linear-gradient(to bottom,
-          rgba(255, 255, 255, 0),
-          rgba(255, 255, 255, 0) 50%,
-          rgba(0, 0, 0, 0.2) 50%,
-          rgba(0, 0, 0, 0.2));
-      background-size: 100% 4px;
-      animation: scanline 10s linear infinite;
-      pointer-events: none;
-      z-index: 40;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      /* Hidden by default (light mode) */
-      transition: opacity 0.5s ease;
-    }
-
-    .dark .crt-lines {
-      opacity: 0.05;
-      /* Visible in dark mode */
-    }
-
-    /* Glitch Effect */
-    .glitch-text {
-      position: relative;
-    }
-
-    .glitch-text::before,
-    .glitch-text::after {
-      content: attr(data-text);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .dark .glitch-text::before {
-      left: 2px;
-      text-shadow: -1px 0 var(--ugt-red);
-      clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim 5s infinite linear alternate-reverse;
-    }
-
-    .dark .glitch-text::after {
-      left: -2px;
-      text-shadow: -1px 0 var(--ugt-green);
-      clip: rect(44px, 450px, 56px, 0);
-      animation: glitch-anim2 5s infinite linear alternate-reverse;
-    }
-
-    /* Disable glitch shadow in light mode for readability */
-    .glitch-text::before,
-    .glitch-text::after {
-      display: none;
-    }
-
-    .dark .glitch-text::before,
-    .dark .glitch-text::after {
-      display: block;
-    }
-
-
-    @keyframes glitch-anim {
-      0% {
-        clip: rect(42px, 9999px, 44px, 0);
-        transform: skew(0.3deg);
+      /* CSS VARIABLES FOR THEMING */
+      :root {
+          /* Light Mode (Sterile Hospital) */
+          --background: #ffffff;
+          --foreground: #0f172a;
+          --card: rgba(255, 255, 255, 0.8);
+          --card-foreground: #0f172a;
+          --popover: #ffffff;
+          --popover-foreground: #0f172a;
+          --primary: #16a34a;
+          --primary-foreground: #ffffff;
+          --secondary: #f1f5f9;
+          --secondary-foreground: #0f172a;
+          --muted: #f1f5f9;
+          --muted-foreground: #64748b;
+          --accent: #f1f5f9;
+          --accent-foreground: #0f172a;
+          --destructive: #ef4444;
+          --destructive-foreground: #ffffff;
+          --border: #e2e8f0;
+          --input: #e2e8f0;
+          --ring: #16a34a;
+          
+          --brand-red: #E30613;
+          --brand-green: #16a34a;
+          --cyber-violet: #9333ea;
       }
 
-      5% {
-        clip: rect(12px, 9999px, 50px, 0);
-        transform: skew(0.3deg);
+      .dark {
+          /* Dark Mode (Cyberpunk Bunker) */
+          --background: #050505;
+          --foreground: #e0e0e0;
+          --card: rgba(20, 20, 20, 0.6);
+          --card-foreground: #e0e0e0;
+          --popover: #0a0a0a;
+          --popover-foreground: #e0e0e0;
+          --primary: #0aff60;
+          --primary-foreground: #000000;
+          --secondary: rgba(255, 255, 255, 0.05);
+          --secondary-foreground: #e0e0e0;
+          --muted: rgba(255, 255, 255, 0.05);
+          --muted-foreground: #a0a0a0;
+          --accent: #b957ce;
+          --accent-foreground: #ffffff;
+          --destructive: #ff0f4b;
+          --destructive-foreground: #ffffff;
+          --border: rgba(255, 255, 255, 0.1);
+          --input: rgba(255, 255, 255, 0.1);
+          --ring: #0aff60;
+
+          --brand-red: #ff0f4b;     /* Neon Crimson */
+          --brand-green: #0aff60;   /* Toxic Acid */
+          --cyber-violet: #b957ce; /* Mystic Accent */
       }
 
-      10% {
-        clip: rect(85px, 9999px, 100px, 0);
-        transform: skew(0.3deg);
+      body {
+          background-color: var(--background);
+          color: var(--foreground);
+          transition: background-color 0.3s ease, color 0.3s ease;
       }
 
-      100% {
-        clip: rect(10px, 9999px, 50px, 0);
-        transform: skew(0.3deg);
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
       }
-    }
-
-    @keyframes glitch-anim2 {
-      0% {
-        clip: rect(20px, 9999px, 60px, 0);
-        transform: skew(0.3deg);
+      ::-webkit-scrollbar-track {
+          background: transparent; 
       }
-
-      100% {
-        clip: rect(70px, 9999px, 90px, 0);
-        transform: skew(0.3deg);
+      ::-webkit-scrollbar-thumb {
+          background: var(--muted-foreground); 
+          border-radius: 3px;
+          opacity: 0.3;
       }
-    }
-
-    /* Marquee Animation */
-    .marquee-container {
-      overflow: hidden;
-    }
-
-    .marquee-content {
-      animation: marquee 25s linear infinite;
-    }
-
-    @keyframes marquee {
-      0% {
-        transform: translateX(0);
+      ::-webkit-scrollbar-thumb:hover {
+          background: var(--brand-green); 
       }
 
-      100% {
-        transform: translateX(-50%);
+      /* CRT Scanline Effect */
+      .crt-lines {
+          background: linear-gradient(
+              to bottom,
+              rgba(255,255,255,0),
+              rgba(255,255,255,0) 50%,
+              rgba(0,0,0,0.2) 50%,
+              rgba(0,0,0,0.2)
+          );
+          background-size: 100% 4px;
+          animation: scanline 10s linear infinite;
+          pointer-events: none;
+          z-index: 40;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+          transition: opacity 0.5s ease;
       }
-    }
+
+      .dark .crt-lines {
+          opacity: 0.05;
+      }
+
+      /* Glitch Effect */
+      .glitch-text {
+          position: relative;
+      }
+      .glitch-text::before,
+      .glitch-text::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+      }
+      .dark .glitch-text::before {
+          left: 2px;
+          text-shadow: -1px 0 var(--brand-red);
+          clip: rect(44px, 450px, 56px, 0);
+          animation: glitch-anim 5s infinite linear alternate-reverse;
+      }
+      .dark .glitch-text::after {
+          left: -2px;
+          text-shadow: -1px 0 var(--brand-green);
+          clip: rect(44px, 450px, 56px, 0);
+          animation: glitch-anim2 5s infinite linear alternate-reverse;
+      }
+      .glitch-text::before, .glitch-text::after {
+          display: none;
+      }
+      .dark .glitch-text::before, .dark .glitch-text::after {
+          display: block;
+      }
+
+      @keyframes glitch-anim {
+          0% { clip: rect(42px, 9999px, 44px, 0); transform: skew(0.3deg); }
+          5% { clip: rect(12px, 9999px, 50px, 0); transform: skew(0.3deg); }
+          10% { clip: rect(85px, 9999px, 100px, 0); transform: skew(0.3deg); }
+          100% { clip: rect(10px, 9999px, 50px, 0); transform: skew(0.3deg); }
+      }
+      @keyframes glitch-anim2 {
+          0% { clip: rect(20px, 9999px, 60px, 0); transform: skew(0.3deg); }
+          100% { clip: rect(70px, 9999px, 90px, 0); transform: skew(0.3deg); }
+      }
+
+      .marquee-container { overflow: hidden; }
+      .marquee-content { animation: marquee 25s linear infinite; }
+      @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+      }
   </style>
-</head>
 
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"JetBrains Mono"', 'monospace'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            'brand-red': 'var(--brand-red)',
+            'brand-green': 'var(--brand-green)',
+            'cyber-violet': 'var(--cyber-violet)',
+            
+            border: "var(--border)",
+            input: "var(--input)",
+            ring: "var(--ring)",
+            background: "var(--background)",
+            foreground: "var(--foreground)",
+            
+            primary: {
+              DEFAULT: "var(--primary)",
+              foreground: "var(--primary-foreground)",
+            },
+            secondary: {
+              DEFAULT: "var(--secondary)",
+              foreground: "var(--secondary-foreground)",
+            },
+            destructive: {
+              DEFAULT: "var(--destructive)",
+              foreground: "var(--destructive-foreground)",
+            },
+            muted: {
+              DEFAULT: "var(--muted)",
+              foreground: "var(--muted-foreground)",
+            },
+            accent: {
+              DEFAULT: "var(--accent)",
+              foreground: "var(--accent-foreground)",
+            },
+            popover: {
+              DEFAULT: "var(--popover)",
+              foreground: "var(--popover-foreground)",
+            },
+            card: {
+              DEFAULT: "var(--card)",
+              foreground: "var(--card-foreground)",
+            },
+          },
+          borderRadius: {
+            lg: "0.5rem",
+            md: "calc(0.5rem - 2px)",
+            sm: "calc(0.5rem - 4px)",
+          },
+          keyframes: {
+            'fade-in': {
+              '0%': { opacity: '0', transform: 'scale(0.95)' },
+              '100%': { opacity: '1', transform: 'scale(1)' },
+            },
+            'heartbeat': {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+            },
+            'marquee': {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' }
+            },
+            'border-beam': {
+                '100%': { transform: 'rotate(1turn)' }
+            }
+          },
+          animation: {
+            'fade-in': 'fade-in 0.5s ease-out',
+            'heartbeat': 'heartbeat 3s linear infinite',
+            'marquee': 'marquee 25s linear infinite',
+            'border-beam': 'border-beam 8s linear infinite',
+          },
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide.js"></script>
+  <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+  <script src="https://unpkg.com/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.541.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.15.0",
+    "class-variance-authority": "https://esm.sh/class-variance-authority@^0.7.1",
+    "clsx": "https://esm.sh/clsx@^2.1.1",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.8.2",
+    "tailwind-merge": "https://esm.sh/tailwind-merge@^3.3.1",
+    "recharts": "https://esm.sh/recharts@^3.1.2",
+    "html-to-image": "https://esm.sh/html-to-image@^1.11.13",
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@4.4.168",
+    "vite": "https://aistudiocdn.com/vite@^7.2.7",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.2"
+  }
+}
+</script>
+</head>
 <body class="bg-background text-foreground">
   <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
-
 </html>

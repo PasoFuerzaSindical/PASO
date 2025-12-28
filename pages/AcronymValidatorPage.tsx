@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
@@ -71,7 +72,7 @@ const AcronymValidatorPage: React.FC = () => {
                 <p className="font-medium">{acronym.text}</p>
                 <div className="flex items-center space-x-2">
                   <Button variant="ghost" size="icon" onClick={() => handleVote(acronym.id, 1)}>
-                    <ThumbsUp className="h-4 w-4 text-ugt-green" />
+                    <ThumbsUp className="h-4 w-4 text-brand-green" />
                   </Button>
                   <span className="font-bold w-8 text-center">{acronym.votes}</span>
                   <Button variant="ghost" size="icon" onClick={() => handleVote(acronym.id, -1)}>

@@ -9,7 +9,7 @@ interface LogoProps {
 
 const Logo: React.FC<LogoProps> = ({ className, animated = true }) => {
   return (
-    <div className={cn("relative flex items-center justify-center text-ugt-green", className)}>
+    <div className={cn("relative flex items-center justify-center text-brand-green", className)}>
       <svg
         viewBox="0 0 200 200"
         fill="none"

@@ -6,9 +6,9 @@ const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElemen
   ({ className, children, ...props }, ref) => (
     <div className="relative group rounded-xl">
         {/* Holographic Border Beam - Visible in Dark Mode */}
-        <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-ugt-green via-cyber-violet to-ugt-red opacity-0 dark:opacity-30 dark:blur-[2px] dark:group-hover:opacity-100 dark:group-hover:blur-[4px] transition-all duration-500"></div>
+        <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-brand-green via-cyber-violet to-brand-red opacity-0 dark:opacity-30 dark:blur-[2px] dark:group-hover:opacity-100 dark:group-hover:blur-[4px] transition-all duration-500"></div>
         
-        {/* Rotating Light Effect (Subtle) - Visible in Dark Mode */}
+        {/* Rotating Light Effect */}
         <div className="absolute -inset-[1px] rounded-xl overflow-hidden pointer-events-none">
             <div className="absolute inset-[-100%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#0000_0%,#0000_50%,#0aff60_100%)] opacity-0 dark:group-hover:opacity-30 transition-opacity duration-500"></div>
         </div>

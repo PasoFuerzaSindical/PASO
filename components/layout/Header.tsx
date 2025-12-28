@@ -30,23 +30,23 @@ const Header: React.FC<HeaderProps> = ({ pageTitle }) => {
   const getBurnoutColor = (level: number) => {
       if (level > 90) return 'bg-destructive text-destructive-foreground animate-pulse';
       if (level > 75) return 'bg-orange-500 text-white';
-      return 'bg-ugt-green text-white';
+      return 'bg-brand-green text-white';
   };
 
   return (
     <header className="flex items-center justify-between h-16 px-4 lg:px-8 border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-40 transition-colors duration-300">
       
-      {/* Title Section - Truncates to avoid pushing right content */}
+      {/* Title Section */}
       <div className="flex flex-col justify-center min-w-0 flex-1 mr-2">
           <h1 className="text-lg md:text-2xl font-semibold text-foreground truncate" title={pageTitle}>
             {pageTitle}
           </h1>
       </div>
       
-      {/* Right Actions - Fixed width / Shrink protected */}
+      {/* Right Actions */}
       <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
         
-        {/* BURNOUT METER - Visual Gag */}
+        {/* BURNOUT METER */}
         <div className="hidden md:flex flex-col items-end w-32 group cursor-help relative" title="Nivel de Hartazgo del Sistema">
             <div className="flex items-center gap-1 text-[10px] font-mono text-muted-foreground mb-1">
                 <Flame className="h-3 w-3" />

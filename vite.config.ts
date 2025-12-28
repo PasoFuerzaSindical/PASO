@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
     define: {
       // This is crucial for Cloud Run/Docker builds. 
       // It replaces 'process.env.API_KEY' in your code with the actual value at build time.
-      'process.env.API_KEY': JSON.stringify(env.API_KEY || env.VITE_GEMINI_API_KEY || env.GEMINI_API_KEY),
+      'process.env.API_KEY': JSON.stringify(env.API_KEY),
       'process.env': {} // Fallback to prevent crashes if other process.env props are accessed
     },
     build: {

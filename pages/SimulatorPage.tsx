@@ -24,13 +24,11 @@ const SimulatorPage: React.FC = () => {
     
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Solo mostrar la marca UGT explícitamente en la fase final
     const isRevelacion = campaignPhase === 'Revelacion';
 
     const startGame = async () => {
         setLoading(true);
         try {
-            // Pasa la fase actual para ajustar el prompt interno
             const chat = initManagerChat(objective, campaignPhase);
             setChatSession(chat);
             setMessages([{ role: 'model', text: "Identifíquese. El sistema está procesando su solicitud de entrada. ¿Cuál es el motivo de su interrupción protocolaria?" }]);
@@ -71,8 +69,6 @@ const SimulatorPage: React.FC = () => {
     }, [messages]);
 
     return (
-        // Usamos flex-1 para llenar el espacio restante del MainLayout (que es flex-col)
-        // min-h-0 es crítico para que el scroll interno funcione dentro de un flex child
         <div className="flex-1 flex flex-col gap-2 w-full min-h-0">
             <div className="flex flex-col lg:flex-row gap-2 h-full min-h-0">
                 
@@ -80,7 +76,7 @@ const SimulatorPage: React.FC = () => {
                 <Card className="lg:w-1/2 flex flex-col h-full overflow-hidden shadow-xl shrink-0 min-h-0">
                     <CardHeader className="flex-shrink-0 bg-secondary/20 border-b border-border py-3">
                         <CardTitle className="flex items-center gap-2 text-lg">
-                            <Briefcase className="h-5 w-5 text-ugt-red" /> 
+                            <Briefcase className="h-5 w-5 text-brand-red" /> 
                             Simulador del Sistema
                         </CardTitle>
                         <CardDescription className="line-clamp-1 text-xs">Misión: <span className="font-bold text-foreground">{objective}</span></CardDescription>
@@ -96,11 +92,11 @@ const SimulatorPage: React.FC = () => {
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm font-semibold">
                                         <span>Paciencia del Sistema</span>
-                                        <span className={gameState.patience < 30 ? "text-destructive" : "text-ugt-green"}>{gameState.patience}%</span>
+                                        <span className={gameState.patience < 30 ? "text-destructive" : "text-brand-green"}>{gameState.patience}%</span>
                                     </div>
                                     <div className="h-4 bg-secondary rounded-full overflow-hidden border border-secondary-foreground/20">
                                         <div 
-                                            className={cn("h-full transition-all duration-500", gameState.patience < 30 ? "bg-destructive" : "bg-ugt-green")} 
+                                            className={cn("h-full transition-all duration-500", gameState.patience < 30 ? "bg-destructive" : "bg-brand-green")} 
                                             style={{ width: `${gameState.patience}%` }}
                                         />
                                     </div>
@@ -122,17 +118,17 @@ const SimulatorPage: React.FC = () => {
                                 </div>
 
                                 {gameStatus === 'won' && (
-                                    <div className="p-4 bg-ugt-green/20 border border-ugt-green rounded-lg text-center animate-fade-in break-words">
-                                        <Smile className="mx-auto h-8 w-8 text-ugt-green mb-2" />
-                                        <h3 className="font-bold text-ugt-green text-lg">¡DERECHO RECONOCIDO!</h3>
+                                    <div className="p-4 bg-brand-green/20 border border-brand-green rounded-lg text-center animate-fade-in break-words">
+                                        <Smile className="mx-auto h-8 w-8 text-brand-green mb-2" />
+                                        <h3 className="font-bold text-brand-green text-lg">¡DERECHO RECONOCIDO!</h3>
                                         <p className="text-sm mt-2">Has demostrado que conocer tus derechos y mostrar firmeza es la única llave que abre estas puertas.</p>
-                                        <div className="mt-3 pt-3 border-t border-ugt-green/30">
+                                        <div className="mt-3 pt-3 border-t border-brand-green/30">
                                             <p className="text-xs font-bold text-foreground flex items-center justify-center gap-1">
                                                 <Users className="h-3 w-3" /> Lección aprendida:
                                             </p>
                                             <p className="text-xs text-muted-foreground mt-1">
                                                 {isRevelacion 
-                                                    ? "UGT te da la formación y el respaldo para que esto pase en la vida real."
+                                                    ? "Ahora sabes que con el respaldo adecuado, esto pasa en la vida real."
                                                     : "La acción colectiva y el conocimiento de la norma te dan la fuerza para que esto pase en la vida real."
                                                 }
                                             </p>
@@ -153,10 +149,7 @@ const SimulatorPage: React.FC = () => {
                                         <div className="mt-3 pt-3 border-t border-destructive/30">
                                             <p className="text-xs font-bold text-foreground">No vayas solo la próxima vez.</p>
                                             <p className="text-xs text-muted-foreground mt-1">
-                                                {isRevelacion
-                                                    ? "Un delegado de UGT habría desbloqueado esta situación."
-                                                    : "Un compañero bien informado o un representante habría desbloqueado esta situación."
-                                                }
+                                                Un respaldo profesional habría desbloqueado esta situación.
                                             </p>
                                         </div>
                                         <Button onClick={startGame} variant="outline" size="sm" className="mt-4 w-full">Reintentar</Button>
@@ -187,7 +180,7 @@ const SimulatorPage: React.FC = () => {
                             <div key={idx} className={cn("flex gap-3 animate-fade-in", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
                                 <div className={cn(
                                     "h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg",
-                                    msg.role === 'user' ? "bg-blue-600" : "bg-ugt-red"
+                                    msg.role === 'user' ? "bg-blue-600" : "bg-brand-red"
                                 )}>
                                     {msg.role === 'user' ? <User className="h-5 w-5 text-white" /> : <Bot className="h-5 w-5 text-white" />}
                                 </div>
@@ -201,7 +194,7 @@ const SimulatorPage: React.FC = () => {
                         ))}
                         {loading && (
                             <div className="flex gap-3">
-                                <div className="h-8 w-8 rounded-full bg-ugt-red flex items-center justify-center flex-shrink-0">
+                                <div className="h-8 w-8 rounded-full bg-brand-red flex items-center justify-center flex-shrink-0">
                                     <Bot className="h-5 w-5 text-white" />
                                 </div>
                                 <div className="bg-secondary p-3 rounded-lg rounded-tl-none">

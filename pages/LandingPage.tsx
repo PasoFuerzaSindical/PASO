@@ -12,21 +12,19 @@ const LandingPage: React.FC = () => {
 
   const tools = [
     {
-      // Medical Side
       title: "Tratamiento Paliativo",
       subtitle: "Protocolo de Descompresión",
       icon: Stethoscope,
       descMedical: "Terapia gamificada para el alivio sintomático del turno.",
       
-      // Hacker Side
       secretTitle: "BINGO DEL PRECARIADO",
       secretMsg: "TU SALUD MENTAL LO NECESITA",
       secretIcon: Radio,
       
       path: "/bingo",
-      color: "text-ugt-green",
-      hoverColor: "group-hover:text-ugt-green",
-      borderColor: "group-hover:border-ugt-green",
+      color: "text-brand-green",
+      hoverColor: "group-hover:text-brand-green",
+      borderColor: "group-hover:border-brand-green",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(22,163,74,0.4)]",
       delay: "0ms"
     },
@@ -41,9 +39,9 @@ const LandingPage: React.FC = () => {
       secretIcon: Eye,
 
       path: "/consultorio",
-      color: "text-ugt-red",
-      hoverColor: "group-hover:text-ugt-red",
-      borderColor: "group-hover:border-ugt-red",
+      color: "text-brand-red",
+      hoverColor: "group-hover:text-brand-red",
+      borderColor: "group-hover:border-brand-red",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(227,6,19,0.4)]",
       delay: "100ms"
     },
@@ -86,12 +84,10 @@ const LandingPage: React.FC = () => {
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex flex-col overflow-x-hidden bg-background w-full group/page justify-between">
       
-      {/* 1. FONDO REACTIVO (Grid + Mouse Tracking) */}
       <CyberBackground className="z-0" />
 
-      {/* Medical HUD Elements (Static Layer) */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute top-4 left-4 text-[9px] font-mono text-ugt-green/30 space-y-1 hidden md:block">
+        <div className="absolute top-4 left-4 text-[9px] font-mono text-brand-green/30 space-y-1 hidden md:block">
           <p className="typing-effect">SYS.STATUS: UNSTABLE</p>
           <p>BURNOUT_LVL: CRITICAL</p>
         </div>
@@ -100,28 +96,22 @@ const LandingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. HERO SECTION (Glitch & Impact) */}
       <div className="relative z-10 flex flex-col items-center justify-center pt-4 pb-8 md:pt-10 md:pb-12 px-4 text-center w-full">
-        
-        {/* NEW: CENTRAL ANIMATED LOGO */}
         <div className="w-24 h-24 md:w-40 md:h-40 mb-4 relative">
-            <div className="absolute inset-0 bg-ugt-green/20 blur-3xl rounded-full animate-pulse"></div>
+            <div className="absolute inset-0 bg-brand-green/20 blur-3xl rounded-full animate-pulse"></div>
             <Logo className="w-full h-full" />
         </div>
 
-        {/* Main Title with Glitch */}
         <h1 className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter mb-4 glitch-text relative select-none" data-text="P.A.S.O.">
           P.A.S.O.
         </h1>
         
-        {/* Subtitle */}
         <p className="text-sm md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light px-2">
-          <span className="text-ugt-green font-mono mr-2">root@sacyl:~#</span>
-          La <span className="text-foreground font-medium border-b-2 border-ugt-red/50 hover:border-ugt-red transition-colors cursor-help">UCI de la Dignidad</span> para el personal sanitario.
+          <span className="text-brand-green font-mono mr-2">root@sacyl:~#</span>
+          La <span className="text-foreground font-medium border-b-2 border-brand-red/50 hover:border-brand-red transition-colors cursor-help">UCI de la Dignidad</span> para el personal sanitario.
         </p>
       </div>
 
-      {/* 3. BENTO GRID (Double-faced Cards) */}
       <div className="relative z-10 container mx-auto max-w-6xl px-4 pb-8 w-full flex-1 flex flex-col justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
           {tools.map((tool, index) => (
@@ -136,7 +126,6 @@ const LandingPage: React.FC = () => {
                 )}
                 style={{ animationDelay: tool.delay }}
             >
-                {/* CARA A: MÉDICA (Visible por defecto) */}
                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:blur-sm">
                     <div className="flex items-start justify-between">
                         <div className={cn("p-1.5 md:p-2 rounded-md bg-white/5", tool.color)}>
@@ -153,9 +142,7 @@ const LandingPage: React.FC = () => {
                     <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-muted-foreground/20 to-transparent opacity-50"></div>
                 </div>
 
-                {/* CARA B: HACKER (Visible on Hover) */}
                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/80 z-10">
-                    {/* Background Glitch Noise */}
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
                     
                     <tool.secretIcon className={cn("h-8 w-8 md:h-10 md:w-10 mb-2 md:mb-3 animate-pulse", tool.hoverColor)} />
@@ -171,13 +158,11 @@ const LandingPage: React.FC = () => {
             </div>
           ))}
 
-           {/* 5th ITEM: THE SIMULATOR (BOSS BATTLE) */}
            <div 
                 onClick={() => navigate('/simulator')}
                 className="group relative h-32 sm:h-40 md:h-48 cursor-pointer overflow-hidden rounded-xl bg-secondary/20 border border-white/5 backdrop-blur-sm transition-all duration-500 md:col-span-2 hover:border-cyber-violet group-hover:shadow-[0_0_30px_-5px_rgba(185,87,206,0.4)]"
                 style={{ animationDelay: "400ms" }}
             >
-                 {/* CARA A: MÉDICA */}
                  <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:blur-sm">
                     <div className="flex items-start justify-between">
                         <div className="p-1.5 md:p-2 rounded-md bg-white/5 text-cyber-violet">
@@ -193,7 +178,6 @@ const LandingPage: React.FC = () => {
                     </div>
                  </div>
 
-                 {/* CARA B: HACKER */}
                  <div className="absolute inset-0 p-4 md:p-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/90 z-10">
                      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
                      <div className="flex items-center gap-4 md:gap-6">
@@ -210,16 +194,15 @@ const LandingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. MARQUEE MANIFESTO */}
       <div className="mt-auto border-t border-secondary/50 bg-background/90 backdrop-blur py-2 md:py-3 overflow-hidden w-full relative z-20">
          <div className="marquee-container flex whitespace-nowrap">
              <div className="marquee-content flex gap-8 md:gap-12 text-xs md:text-sm font-mono font-bold text-muted-foreground/60 uppercase tracking-widest">
-                 <span className="text-ugt-red">/// SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO ///</span>
-                 <span className="text-ugt-green">LA FUERZA SINDICAL ESTÁ DESPERTANDO</span>
+                 <span className="text-brand-red">/// SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO ///</span>
+                 <span className="text-brand-green">LA FUERZA SINDICAL ESTÁ DESPERTANDO</span>
                  <span>TU SILENCIO ES RUIDO</span>
                  <span className="text-blue-400">NO ES TU CULPA, ES EL PROTOCOLO</span>
-                 <span className="text-ugt-red">/// SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO ///</span>
-                 <span className="text-ugt-green">LA FUERZA SINDICAL ESTÁ DESPERTANDO</span>
+                 <span className="text-brand-red">/// SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO ///</span>
+                 <span className="text-brand-green">LA FUERZA SINDICAL ESTÁ DESPERTANDO</span>
                  <span>TU SILENCIO ES RUIDO</span>
                  <span className="text-blue-400">NO ES TU CULPA, ES EL PROTOCOLO</span>
              </div>

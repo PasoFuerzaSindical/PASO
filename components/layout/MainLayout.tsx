@@ -24,18 +24,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, pageTitle }) => {
   };
 
   return (
-    <div className="h-screen bg-background text-foreground overflow-hidden relative selection:bg-ugt-green/30 selection:text-ugt-green transition-colors duration-300">
+    <div className="h-screen bg-background text-foreground overflow-hidden relative selection:bg-brand-green/30 selection:text-brand-green transition-colors duration-300">
       {/* Global CRT Overlay - Managed by CSS (hidden in light mode) */}
       <div className="crt-lines"></div>
       
       <Sidebar isCollapsed={isSidebarCollapsed} setCollapsed={handleSetCollapsed} />
       
-      {/* 
-          LAYOUT FIX:
-          Removed 'w-full' and 'flex-1' from this wrapper.
-          Since the parent is a block container (h-screen), this div with 'ml-*' will automatically 
-          calculate its width as (ParentWidth - MarginLeft), preventing horizontal overflow.
-      */}
       <div className={cn(
           "flex flex-col h-full transition-all duration-300 relative z-10",
           isMobile ? "ml-0 pb-16" : (isSidebarCollapsed ? "ml-20" : "ml-64")

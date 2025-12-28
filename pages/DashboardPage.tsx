@@ -1,5 +1,4 @@
 
-
 import React, {
     useState,
     useEffect
@@ -80,7 +79,7 @@ const DashboardPage: React.FC = () => {
                         <CardDescription>Likes, comentarios, etc.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-4xl font-bold text-ugt-green">{data.kpis.interaction.toLocaleString('es-ES')}</p>
+                        <p className="text-4xl font-bold text-brand-green">{data.kpis.interaction.toLocaleString('es-ES')}</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -89,7 +88,7 @@ const DashboardPage: React.FC = () => {
                         <CardDescription>Ojos en la campaña</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-4xl font-bold text-ugt-green">{data.kpis.reach.toLocaleString('es-ES')}</p>
+                        <p className="text-4xl font-bold text-brand-green">{data.kpis.reach.toLocaleString('es-ES')}</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -98,7 +97,7 @@ const DashboardPage: React.FC = () => {
                         <CardDescription>De 0 a "Pandemia"</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-4xl font-bold text-ugt-green">{data.kpis.virality}%</p>
+                        <p className="text-4xl font-bold text-brand-green">{data.kpis.virality}%</p>
                     </CardContent>
                 </Card>
                  <div className="space-y-4">

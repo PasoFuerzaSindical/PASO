@@ -20,7 +20,7 @@ const ConsultorioPage: React.FC = () => {
   const [result, setResult] = useState<SurrealConsultationResult | null>(null);
   const { campaignPhase } = useCampaign();
   const [, setSavedConsultations] = useLocalStorage<SavedConsultation[]>('saved-consultations', []);
-
+  
   // Audio Recording State
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -55,7 +55,7 @@ const ConsultorioPage: React.FC = () => {
       setRecordingTime(0);
 
       timerRef.current = window.setInterval(() => {
-        setRecordingTime(prev => prev + 1);
+          setRecordingTime(prev => prev + 1);
       }, 1000);
 
     } catch (err) {
@@ -74,10 +74,10 @@ const ConsultorioPage: React.FC = () => {
       }
     }
   };
-
+  
   const resetRecording = () => {
-    setAudioBlob(null);
-    setRecordingTime(0);
+      setAudioBlob(null);
+      setRecordingTime(0);
   }
 
   const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -107,13 +107,13 @@ const ConsultorioPage: React.FC = () => {
       let isAudio = false;
 
       if (audioBlob) {
-        inputData = await blobToBase64(audioBlob);
-        isAudio = true;
+          inputData = await blobToBase64(audioBlob);
+          isAudio = true;
       }
 
       const response = await handleSurrealConsultation(inputData, campaignPhase, isAudio);
       setResult(response);
-
+      
       // Clean up audio after success
       if (audioBlob) resetRecording();
 
@@ -127,8 +127,7 @@ const ConsultorioPage: React.FC = () => {
       setSavedConsultations(prev => [newSavedConsultation, ...prev]);
 
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(`El Oráculo está en su descanso para el café. (Detalles: ${errorMessage})`);
+      setError('El Oráculo está en su descanso para el café. Inténtalo más tarde.');
     } finally {
       setLoading(false);
     }
@@ -145,71 +144,71 @@ const ConsultorioPage: React.FC = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-
+            
             {/* Input Area Swapper */}
             {audioBlob ? (
-              <div className="p-6 border-2 border-ugt-green rounded-md flex items-center justify-between bg-secondary/30 animate-pulse">
-                <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-full bg-ugt-green flex items-center justify-center text-background font-bold">
-                    <Mic className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-ugt-green">Audio Grabado</p>
-                    <p className="text-xs text-muted-foreground">{recordingTime} segundos de desahogo</p>
-                  </div>
-                </div>
-                <Button type="button" variant="ghost" onClick={resetRecording} className="text-muted-foreground hover:text-destructive">
-                  Cancelar
-                </Button>
-              </div>
-            ) : isRecording ? (
-              <div className="p-6 border-2 border-destructive rounded-md flex items-center justify-between bg-destructive/10">
-                <div className="flex items-center gap-4">
-                  <div className="relative h-10 w-10">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
-                    <div className="relative inline-flex rounded-full h-10 w-10 bg-destructive items-center justify-center">
-                      <Mic className="h-6 w-6 text-white" />
+                <div className="p-6 border-2 border-ugt-green rounded-md flex items-center justify-between bg-secondary/30 animate-pulse">
+                    <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-full bg-ugt-green flex items-center justify-center text-background font-bold">
+                            <Mic className="h-6 w-6" />
+                        </div>
+                        <div>
+                            <p className="font-semibold text-ugt-green">Audio Grabado</p>
+                            <p className="text-xs text-muted-foreground">{recordingTime} segundos de desahogo</p>
+                        </div>
                     </div>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-destructive">Grabando...</p>
-                    <p className="text-xs text-muted-foreground font-mono">00:{recordingTime < 10 ? `0${recordingTime}` : recordingTime}</p>
-                  </div>
+                    <Button type="button" variant="ghost" onClick={resetRecording} className="text-muted-foreground hover:text-destructive">
+                        Cancelar
+                    </Button>
                 </div>
-                <Button type="button" variant="destructive" size="sm" onClick={stopRecording}>
-                  <Square className="h-4 w-4 mr-2 fill-current" /> Parar
-                </Button>
-              </div>
+            ) : isRecording ? (
+                 <div className="p-6 border-2 border-destructive rounded-md flex items-center justify-between bg-destructive/10">
+                     <div className="flex items-center gap-4">
+                         <div className="relative h-10 w-10">
+                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75"></span>
+                             <div className="relative inline-flex rounded-full h-10 w-10 bg-destructive items-center justify-center">
+                                 <Mic className="h-6 w-6 text-white" />
+                             </div>
+                         </div>
+                        <div>
+                            <p className="font-semibold text-destructive">Grabando...</p>
+                            <p className="text-xs text-muted-foreground font-mono">00:{recordingTime < 10 ? `0${recordingTime}` : recordingTime}</p>
+                        </div>
+                    </div>
+                    <Button type="button" variant="destructive" size="sm" onClick={stopRecording}>
+                        <Square className="h-4 w-4 mr-2 fill-current" /> Parar
+                    </Button>
+                 </div>
             ) : (
-              <div className="relative">
-                <Textarea
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Describe tu desdicha aquí..."
-                  rows={5}
-                  disabled={loading}
-                  className="pr-12"
-                />
-                <div className="absolute bottom-3 right-3">
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="secondary"
-                    className="rounded-full h-10 w-10 hover:bg-destructive hover:text-white transition-colors"
-                    onClick={startRecording}
-                    title="Grabar audio"
+                <div className="relative">
+                    <Textarea
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Describe tu desdicha aquí..."
+                    rows={5}
                     disabled={loading}
-                  >
-                    <Mic className="h-5 w-5" />
-                  </Button>
+                    className="pr-12"
+                    />
+                    <div className="absolute bottom-3 right-3">
+                        <Button 
+                            type="button" 
+                            size="icon" 
+                            variant="secondary" 
+                            className="rounded-full h-10 w-10 hover:bg-destructive hover:text-white transition-colors"
+                            onClick={startRecording}
+                            title="Grabar audio"
+                            disabled={loading}
+                        >
+                            <Mic className="h-5 w-5" />
+                        </Button>
+                    </div>
                 </div>
-              </div>
             )}
 
           </CardContent>
           <CardFooter>
             <Button type="submit" disabled={loading || (!query.trim() && !audioBlob)}>
-              {loading ? <Loader text="Analizando ondas cerebrales..." /> : <><Send className="h-4 w-4 mr-2" /> Enviar al Oráculo</>}
+              {loading ? <Loader text="Analizando ondas cerebrales..." /> : <><Send className="h-4 w-4 mr-2"/> Enviar al Oráculo</>}
             </Button>
           </CardFooter>
         </form>
@@ -230,9 +229,9 @@ const ConsultorioPage: React.FC = () => {
           </CardHeader>
           <CardContent className="grid md:grid-cols-2 gap-6 pt-6">
             <div className="space-y-4 min-h-[200px]">
-              <Typewriter
-                text={result.text}
-                speed={20}
+              <Typewriter 
+                text={result.text} 
+                speed={20} 
                 className="text-sm leading-relaxed text-foreground/90"
               />
             </div>

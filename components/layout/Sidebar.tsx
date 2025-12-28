@@ -50,16 +50,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
             children={({ isActive }) => (
                 <div className={cn(
                     "flex items-center rounded-lg transition-all duration-200 relative overflow-hidden group w-full",
-                    // Solo usar h-full en móvil para llenar la barra de navegación
                     isMobileView ? "h-full" : "",
                     
                     isActive 
-                        ? "text-ugt-green bg-ugt-green/10 shadow-[0_0_15px_-5px_rgba(10,255,96,0.5)] border border-ugt-green/20" 
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50", // Quitamos bordes en hover para limpiar diseño
+                        ? "text-brand-green bg-brand-green/10 shadow-[0_0_15px_-5px_rgba(10,255,96,0.5)] border border-brand-green/20" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
                     
                     isMobileView 
                         ? "flex-col justify-center p-1 text-[10px] gap-1"
-                        : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3") // Alineación izquierda si está expandido
+                        : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3")
                 )}>
                     <link.icon className={cn(
                         "h-5 w-5 transition-all flex-shrink-0", 
@@ -69,9 +68,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                     {(!isCollapsed && !isMobileView) && <span className="ml-3 font-medium truncate">{link.text}</span>}
                     {isMobileView && <span className="text-[9px] truncate max-w-full">{link.text}</span>}
                     
-                    {/* Decorative glow line for active items */}
                     {isActive && !isMobileView && (
-                        <div className="absolute left-0 top-0 h-full w-1 bg-ugt-green shadow-[0_0_10px_#0aff60]"></div>
+                        <div className="absolute left-0 top-0 h-full w-1 bg-brand-green shadow-[0_0_10px_#0aff60]"></div>
                     )}
                 </div>
             )}
@@ -87,7 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                 {isAuthenticated && showMobileAdminMenu && (
                     <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl flex flex-col animate-fade-in">
                         <div className="flex items-center justify-between p-4 border-b border-border bg-secondary/20">
-                            <h2 className="text-lg font-bold text-ugt-red flex items-center gap-2 font-mono tracking-wider">
+                            <h2 className="text-lg font-bold text-brand-red flex items-center gap-2 font-mono tracking-wider">
                                 <Settings className="h-5 w-5 animate-spin-slow" /> ZONA DE MANDO
                             </h2>
                             <button 
@@ -108,13 +106,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                                         className={({ isActive }) => cn(
                                             "flex flex-col items-center justify-center p-3 rounded-xl border bg-secondary/30 gap-2 text-center transition-all duration-200 aspect-square",
                                             isActive 
-                                                ? "border-ugt-red text-ugt-red shadow-[0_0_15px_rgba(255,15,75,0.3)] bg-ugt-red/10" 
-                                                : "border-border text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-ugt-red/50"
+                                                ? "border-brand-red text-brand-red shadow-[0_0_15px_rgba(255,15,75,0.3)] bg-brand-red/10" 
+                                                : "border-border text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-brand-red/50"
                                         )}
                                     >
                                         {({ isActive }) => (
                                             <>
-                                                <link.icon className={cn("h-8 w-8 mb-1", isActive ? "text-ugt-red" : "text-muted-foreground")} />
+                                                <link.icon className={cn("h-8 w-8 mb-1", isActive ? "text-brand-red" : "text-muted-foreground")} />
                                                 <span className="text-[10px] font-medium leading-tight">{link.text}</span>
                                             </>
                                         )}
@@ -134,8 +132,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                             className={cn(
                                 "flex flex-col items-center justify-center p-1 text-[10px] flex-1 h-full gap-1 rounded-lg transition-all duration-300 active:scale-95",
                                 showMobileAdminMenu 
-                                    ? "text-ugt-red bg-ugt-red/10 shadow-[0_0_15px_-5px_rgba(255,15,75,0.5)] border border-ugt-red/20"
-                                    : "text-ugt-red hover:bg-secondary"
+                                    ? "text-brand-red bg-brand-red/10 shadow-[0_0_15px_-5px_rgba(255,15,75,0.5)] border border-brand-red/20"
+                                    : "text-brand-red hover:bg-secondary"
                             )}
                          >
                              <Settings className={cn("h-6 w-6", showMobileAdminMenu && "animate-spin-slow")} />
@@ -155,12 +153,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
             <div className="flex flex-col items-center justify-center h-24 border-b border-border px-2 relative overflow-hidden flex-shrink-0">
                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,255,96,0.15),transparent_70%)] animate-pulse pointer-events-none"></div>
                  
-                 {/* LOGO INTEGRATION */}
                  <div className={cn("relative z-10 transition-all duration-300", isCollapsed ? "h-12 w-12" : "h-16 w-16 flex items-center gap-2")}>
                     <Logo className="w-full h-full" />
                     {!isCollapsed && (
                         <div className="flex flex-col justify-center">
-                            <h1 className="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-ugt-green via-foreground to-ugt-green drop-shadow-[0_0_5px_rgba(10,255,96,0.5)]">
+                            <h1 className="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-foreground to-brand-green drop-shadow-[0_0_5px_rgba(10,255,96,0.5)]">
                                 P.A.S.O.
                             </h1>
                         </div>

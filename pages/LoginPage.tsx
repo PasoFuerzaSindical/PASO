@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -32,7 +31,7 @@ const LoginPage: React.FC = () => {
                  <Card className="w-full animate-fade-in">
                     <form onSubmit={handleSubmit}>
                         <CardHeader className="text-center">
-                            <Shield className="mx-auto h-12 w-12 text-ugt-red" />
+                            <Shield className="mx-auto h-12 w-12 text-brand-red" />
                             <CardTitle>Zona de Administración</CardTitle>
                             <CardDescription>
                                 Acceso restringido para el equipo de campaña.

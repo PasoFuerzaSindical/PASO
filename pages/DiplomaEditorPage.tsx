@@ -34,8 +34,8 @@ const initialDiplomaState: DiplomaState = {
     title: 'Certificado de Supervivencia',
     recipient: 'Un/a Profesional Sanitario/a Anónimo/a',
     body: 'Por demostrar una capacidad sobrehumana para soportar el absurdo, navegar la burocracia y mantener un pulso estable mientras el sistema se desmorona. Tu contribución al caos organizado no ha pasado desapercibida.',
-    signature: 'El Sindicato P.A.S.O.',
-    tagline: 'Si pasas de todo, sigue a tu P.A.S.O. Si quieres soluciones, UGT es tu sindicato.'
+    signature: 'La Fuerza Sindical P.A.S.O.',
+    tagline: 'Si pasas de todo, sigue a tu PASO. Si quieres soluciones, sigue a P.A.S.O..'
 };
 
 const DiplomaEditorPage: React.FC = () => {
