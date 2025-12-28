@@ -1,6 +1,4 @@
 
-
-
 import React, { createContext, useContext, ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -8,11 +6,13 @@ import { AdminUser } from '../lib/types';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  currentUser: string | null;
   admins: AdminUser[];
   login: (user: string, pass: string) => boolean;
   logout: () => void;
   addAdmin: (user: string, pass: string) => boolean;
   removeAdmin: (id: string) => void;
+  updatePassword: (oldPass: string, newPass: string) => { success: boolean; message: string };
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,6 +23,7 @@ const DEFAULT_ADMIN_PASS = 'paso2026!';
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useLocalStorage<boolean>('paso-auth', false);
+  const [currentUser, setCurrentUser] = useLocalStorage<string | null>('paso-current-user', null);
   const [admins, setAdmins] = useLocalStorage<AdminUser[]>('paso-admins', []);
   const navigate = useNavigate();
 
@@ -37,12 +38,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         },
       ]);
     }
-  }, []); // Run only once
+  }, [admins, setAdmins]);
 
   const login = (user: string, pass: string): boolean => {
     const admin = admins.find(a => a.username === user);
     if (admin && admin.password === pass) {
       setIsAuthenticated(true);
+      setCurrentUser(user);
       navigate('/dashboard');
       return true;
     }
@@ -51,7 +53,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = () => {
     setIsAuthenticated(false);
+    setCurrentUser(null);
     navigate('/');
+  };
+
+  const updatePassword = (oldPass: string, newPass: string) => {
+    if (!currentUser) return { success: false, message: "No hay sesión activa." };
+    
+    const adminIndex = admins.findIndex(a => a.username === currentUser);
+    if (adminIndex === -1) return { success: false, message: "Usuario no encontrado." };
+    
+    if (admins[adminIndex].password !== oldPass) {
+      return { success: false, message: "La contraseña actual es incorrecta." };
+    }
+
+    const updatedAdmins = [...admins];
+    updatedAdmins[adminIndex] = { ...updatedAdmins[adminIndex], password: newPass };
+    setAdmins(updatedAdmins);
+    
+    return { success: true, message: "Contraseña actualizada correctamente." };
   };
 
   const addAdmin = (user: string, pass: string): boolean => {
@@ -68,7 +88,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const removeAdmin = (id: string) => {
-    // Prevent deleting the last admin
     if (admins.length <= 1) {
         alert("No se puede eliminar al último administrador.");
         return;
@@ -76,10 +95,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setAdmins(prev => prev.filter(a => a.id !== id));
   };
   
-  // Expose admins without password for security
   const safeAdmins = admins.map(({ password, ...rest }) => rest);
 
-  const value = { isAuthenticated, admins: safeAdmins, login, logout, addAdmin, removeAdmin };
+  const value = { 
+    isAuthenticated, 
+    currentUser,
+    admins: safeAdmins, 
+    login, 
+    logout, 
+    addAdmin, 
+    removeAdmin,
+    updatePassword
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

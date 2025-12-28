@@ -5,19 +5,25 @@ import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { Label } from '../components/ui/Label';
 import { useAuth } from '../contexts/AuthContext';
-import { UserPlus, Trash2, ShieldCheck, AlertTriangle, Download, Upload } from 'lucide-react';
+import { UserPlus, Trash2, ShieldCheck, AlertTriangle, Download, Upload, KeyRound } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '../components/ui/Alert';
+// Added missing import for 'cn' utility
+import { cn } from '../lib/utils';
 
 const SettingsPage: React.FC = () => {
-    const { admins, addAdmin, removeAdmin } = useAuth();
+    const { admins, addAdmin, removeAdmin, updatePassword, currentUser } = useAuth();
     const [newUsername, setNewUsername] = useState('');
+    const [newAdminPassword, setNewAdminPassword] = useState('');
+    
+    // Change Password State
+    const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     const [importFile, setImportFile] = useState<File | null>(null);
     
-    // In a real app, the title would be managed by a separate settings context/provider.
-    // For simplicity, we'll just show the concept here.
     const [appTitle, setAppTitle] = useState('P.A.S.O. Campaign Hub');
 
     const handleAddAdmin = (e: React.FormEvent) => {
@@ -25,18 +31,44 @@ const SettingsPage: React.FC = () => {
         setError(null);
         setSuccess(null);
 
-        if (!newUsername.trim() || !newPassword.trim()) {
+        if (!newUsername.trim() || !newAdminPassword.trim()) {
             setError("El nombre de usuario y la contraseña no pueden estar vacíos.");
             return;
         }
 
-        const added = addAdmin(newUsername, newPassword);
+        const added = addAdmin(newUsername, newAdminPassword);
         if (added) {
             setSuccess(`Administrador "${newUsername}" añadido correctamente.`);
             setNewUsername('');
-            setNewPassword('');
+            setNewAdminPassword('');
         } else {
             setError(`El nombre de usuario "${newUsername}" ya existe.`);
+        }
+    };
+
+    const handleChangePassword = (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        setSuccess(null);
+
+        if (newPassword !== confirmPassword) {
+            setError("Las nuevas contraseñas no coinciden.");
+            return;
+        }
+
+        if (newPassword.length < 6) {
+            setError("La nueva contraseña debe tener al menos 6 caracteres.");
+            return;
+        }
+
+        const result = updatePassword(currentPassword, newPassword);
+        if (result.success) {
+            setSuccess(result.message);
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+        } else {
+            setError(result.message);
         }
     };
 
@@ -114,82 +146,49 @@ const SettingsPage: React.FC = () => {
 
     return (
         <div className="container mx-auto max-w-4xl space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Configuración de la Campaña</CardTitle>
-                    <CardDescription>
-                        Ajusta el título principal que se muestra en la aplicación.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-2">
-                        <Label htmlFor="appTitle">Título de la Aplicación</Label>
-                        <Input 
-                            id="appTitle" 
-                            value={appTitle} 
-                            onChange={(e) => setAppTitle(e.target.value)} 
-                        />
-                    </div>
-                </CardContent>
-                <CardFooter>
-                    <Button onClick={() => alert('En una app real, esto guardaría el título.')}>Guardar Título</Button>
-                </CardFooter>
-            </Card>
+            {/* ALERT BOX FOR FEEDBACK */}
+            {(error || success) && (
+                <div className="animate-fade-in space-y-4">
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+                    {success && (
+                        <Alert className="border-brand-green text-brand-green">
+                            <ShieldCheck className="h-4 w-4" />
+                            <AlertTitle>Éxito</AlertTitle>
+                            <AlertDescription>{success}</AlertDescription>
+                        </Alert>
+                    )}
+                </div>
+            )}
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Gestión de Administradores</CardTitle>
-                    <CardDescription>
-                        Añade o elimina usuarios con acceso al panel de administración.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div>
-                        <h3 className="font-semibold mb-2">Administradores Actuales</h3>
-                        <ul className="space-y-2">
-                            {admins.map(admin => (
-                                <li key={admin.id} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                        <ShieldCheck className="h-5 w-5 text-ugt-green" />
-                                        <span className="font-medium">{admin.username}</span>
-                                    </div>
-                                    <Button 
-                                        variant="destructive" 
-                                        size="icon" 
-                                        onClick={() => handleDeleteAdmin(admin.id)}
-                                        disabled={admins.length <= 1}
-                                        title={admins.length <= 1 ? "No se puede eliminar al último administrador" : "Eliminar"}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    <form onSubmit={handleAddAdmin} className="space-y-4 pt-4 border-t border-secondary/50">
-                        <h3 className="font-semibold">Añadir Nuevo Administrador</h3>
-                        {error && (
-                            <Alert variant="destructive">
-                                <AlertTriangle className="h-4 w-4" />
-                                <AlertTitle>Error</AlertTitle>
-                                <AlertDescription>{error}</AlertDescription>
-                            </Alert>
-                        )}
-                         {success && (
-                            <Alert>
-                                <ShieldCheck className="h-4 w-4 text-ugt-green" />
-                                <AlertTitle>Éxito</AlertTitle>
-                                <AlertDescription>{success}</AlertDescription>
-                            </Alert>
-                        )}
-                        <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-8">
+                {/* CHANGE PASSWORD CARD */}
+                <Card className="h-full">
+                    <form onSubmit={handleChangePassword}>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <KeyRound className="h-5 w-5 text-brand-green" />
+                                <CardTitle>Seguridad de la Cuenta</CardTitle>
+                            </div>
+                            <CardDescription>
+                                Cambia tu contraseña de acceso para el usuario <span className="font-bold text-foreground">{currentUser}</span>.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="new-username">Nuevo Usuario</Label>
+                                <Label htmlFor="current-password">Contraseña Actual</Label>
                                 <Input 
-                                    id="new-username" 
-                                    value={newUsername}
-                                    onChange={(e) => setNewUsername(e.target.value)}
-                                    placeholder="ej: miembro_equipo"
+                                    id="current-password" 
+                                    type="password"
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
                                 />
                             </div>
                             <div className="space-y-2">
@@ -200,50 +199,152 @@ const SettingsPage: React.FC = () => {
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     placeholder="••••••••"
+                                    required
                                 />
                             </div>
-                        </div>
-                         <Button type="submit" className="w-full sm:w-auto">
-                            <UserPlus className="h-4 w-4 mr-2" />
-                            Añadir Administrador
-                        </Button>
+                            <div className="space-y-2">
+                                <Label htmlFor="confirm-password">Confirmar Nueva Contraseña</Label>
+                                <Input 
+                                    id="confirm-password" 
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+                        </CardContent>
+                        <CardFooter>
+                            <Button type="submit" className="w-full">
+                                Actualizar Contraseña
+                            </Button>
+                        </CardFooter>
                     </form>
+                </Card>
+
+                {/* ADD ADMIN CARD */}
+                <Card className="h-full">
+                    <form onSubmit={handleAddAdmin}>
+                        <CardHeader>
+                            <div className="flex items-center gap-2">
+                                <UserPlus className="h-5 w-5 text-cyber-violet" />
+                                <CardTitle>Añadir Administrador</CardTitle>
+                            </div>
+                            <CardDescription>
+                                Crea un nuevo acceso para otros miembros del equipo.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="new-username">Nombre de Usuario</Label>
+                                <Input 
+                                    id="new-username" 
+                                    value={newUsername}
+                                    onChange={(e) => setNewUsername(e.target.value)}
+                                    placeholder="ej: miembro_equipo"
+                                    required
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="new-admin-password">Contraseña</Label>
+                                <Input 
+                                    id="new-admin-password" 
+                                    type="password"
+                                    value={newAdminPassword}
+                                    onChange={(e) => setNewAdminPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                />
+                            </div>
+                        </CardContent>
+                        <CardFooter>
+                            <Button type="submit" variant="secondary" className="w-full">
+                                Crear Acceso
+                            </Button>
+                        </CardFooter>
+                    </form>
+                </Card>
+            </div>
+
+            {/* MANAGE ADMINS CARD */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Administradores Actuales</CardTitle>
+                    <CardDescription>
+                        Lista de personas con acceso a la zona de mando. No puedes eliminarte a ti mismo si eres el último.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ul className="space-y-2">
+                        {admins.map(admin => (
+                            <li key={admin.id} className="flex items-center justify-between p-3 bg-secondary/50 rounded-lg border border-border">
+                                <div className="flex items-center gap-2">
+                                    <ShieldCheck className={cn("h-5 w-5", admin.username === currentUser ? "text-brand-green" : "text-muted-foreground")} />
+                                    <span className="font-medium">
+                                        {admin.username}
+                                        {admin.username === currentUser && <span className="ml-2 text-[10px] bg-brand-green/20 text-brand-green px-2 py-0.5 rounded-full uppercase tracking-tighter">Tú</span>}
+                                    </span>
+                                </div>
+                                <Button 
+                                    variant="destructive" 
+                                    size="icon" 
+                                    onClick={() => handleDeleteAdmin(admin.id)}
+                                    disabled={admins.length <= 1 || admin.username === currentUser}
+                                    title={admin.username === currentUser ? "No puedes eliminar tu propia cuenta activa" : "Eliminar"}
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </li>
+                        ))}
+                    </ul>
                 </CardContent>
             </Card>
             
-            <Card>
-                <CardHeader>
-                    <CardTitle>Copia de Seguridad</CardTitle>
-                    <CardDescription>
-                        Exporta todos los datos de la campaña a un archivo o importa desde una copia de seguridad.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="space-y-2">
-                        <h3 className="font-semibold">Exportar Datos</h3>
-                        <p className="text-sm text-muted-foreground">Guarda una copia de seguridad de todo el contenido y configuración en tu ordenador.</p>
-                        <Button onClick={handleExport}>
-                            <Download className="h-4 w-4 mr-2"/> Exportar a Archivo
+            {/* BACKUP & TITLE CARD */}
+            <div className="grid md:grid-cols-2 gap-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Configuración Visual</CardTitle>
+                        <CardDescription>Ajusta el título global de la app.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-2">
+                            <Label htmlFor="appTitle">Título de la Aplicación</Label>
+                            <Input 
+                                id="appTitle" 
+                                value={appTitle} 
+                                onChange={(e) => setAppTitle(e.target.value)} 
+                            />
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        <Button variant="outline" onClick={() => alert('Título guardado localmente.')}>Guardar Título</Button>
+                    </CardFooter>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Copia de Seguridad</CardTitle>
+                        <CardDescription>Exporta o importa toda la base de datos local.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <Button onClick={handleExport} className="w-full">
+                            <Download className="h-4 w-4 mr-2"/> Exportar Todo
                         </Button>
-                    </div>
-                     <div className="space-y-2 pt-4 border-t border-secondary/50">
-                        <h3 className="font-semibold">Importar Datos</h3>
-                        <p className="text-sm text-muted-foreground">Restaura la campaña desde un archivo de copia de seguridad. <strong>Atención:</strong> esto reemplazará todos los datos actuales.</p>
-                        <div className="flex flex-col sm:flex-row gap-2">
+                        <div className="flex flex-col gap-2">
                              <Input 
                                 type="file" 
                                 accept=".json" 
                                 onChange={(e) => setImportFile(e.target.files ? e.target.files[0] : null)}
-                                className="flex-1"
+                                className="text-xs"
                             />
-                            <Button onClick={handleImport} variant="destructive" disabled={!importFile}>
-                                <Upload className="h-4 w-4 mr-2"/> Importar y Sobrescribir
+                            <Button onClick={handleImport} variant="destructive" disabled={!importFile} className="w-full">
+                                <Upload className="h-4 w-4 mr-2"/> Importar Backup
                             </Button>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
-
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 };
