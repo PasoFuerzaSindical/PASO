@@ -22,6 +22,14 @@ export interface CampaignPost {
   createdAt: string;
 }
 
+export interface SocialMetricEntry {
+  id: string;
+  platform: 'Instagram' | 'X (Twitter)' | 'TikTok' | 'YouTube' | 'Web/Blog';
+  metricType: 'Alcance' | 'Interacciones' | 'Seguidores';
+  value: number;
+  date: string;
+}
+
 export interface SurrealConsultationResult {
   text: string;
   imageB64: string;

@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
       hoverColor: "group-hover:text-brand-green",
       borderColor: "group-hover:border-brand-green",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(22,163,74,0.4)]",
-      delay: "0ms"
+      delay: "100ms"
     },
     {
       title: "Triaje Psicológico",
@@ -43,7 +43,7 @@ const LandingPage: React.FC = () => {
       hoverColor: "group-hover:text-brand-red",
       borderColor: "group-hover:border-brand-red",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(227,6,19,0.4)]",
-      delay: "100ms"
+      delay: "200ms"
     },
     {
       title: "Diagnóstico de Realidad",
@@ -60,7 +60,7 @@ const LandingPage: React.FC = () => {
       hoverColor: "group-hover:text-blue-400",
       borderColor: "group-hover:border-blue-400",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(96,165,250,0.4)]",
-      delay: "200ms"
+      delay: "300ms"
     },
     {
       title: "Bioética del Sistema",
@@ -77,7 +77,7 @@ const LandingPage: React.FC = () => {
       hoverColor: "group-hover:text-yellow-400",
       borderColor: "group-hover:border-yellow-400",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(250,204,21,0.4)]",
-      delay: "300ms"
+      delay: "400ms"
     }
   ];
 
@@ -114,6 +114,49 @@ const LandingPage: React.FC = () => {
 
       <div className="relative z-10 container mx-auto max-w-6xl px-4 pb-8 w-full flex-1 flex flex-col justify-center">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
+          
+          {/* SIMULATOR CARD - NOW FIRST AND SPANNING 2 COLUMNS */}
+          <div 
+                onClick={() => navigate('/simulator')}
+                className="group relative h-40 sm:h-48 md:h-56 cursor-pointer overflow-hidden rounded-xl bg-secondary/20 border border-white/5 backdrop-blur-sm transition-all duration-500 md:col-span-2 hover:border-cyber-violet group-hover:shadow-[0_0_40px_-5px_rgba(185,87,206,0.5)] border-l-4 border-l-cyber-violet"
+                style={{ animationDelay: "0ms" }}
+            >
+                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:blur-sm">
+                    <div className="flex items-start justify-between">
+                        <div className="p-1.5 md:p-2 rounded-md bg-white/5 text-cyber-violet">
+                            <Gamepad2 className="h-6 w-6 md:h-8 md:w-8" />
+                        </div>
+                        <div className="flex flex-col items-end">
+                            <span className="text-[9px] md:text-[10px] font-mono text-muted-foreground/50 border border-white/10 px-2 py-0.5 rounded mb-1">
+                               SIM_TRAINING_v4.2
+                            </span>
+                            <span className="text-[10px] text-cyber-violet animate-pulse font-bold uppercase tracking-tighter">Acceso Prioritario</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="text-xl md:text-3xl font-black text-foreground/90 leading-tight uppercase tracking-tight">Entrenamiento de Negociación</h3>
+                        <p className="text-sm md:text-base text-muted-foreground mt-1 leading-tight font-light">Enfréntate al Sistema en un entorno controlado antes del turno real.</p>
+                    </div>
+                 </div>
+
+                 <div className="absolute inset-0 p-4 md:p-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/90 z-10">
+                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+                     <div className="flex items-center gap-4 md:gap-8">
+                        <Swords className="h-10 w-10 md:h-16 md:w-16 text-cyber-violet animate-pulse" />
+                        <div className="text-left">
+                             <h3 className="text-3xl md:text-5xl font-black tracking-widest uppercase glitch-text text-cyber-violet" data-text="BOSS BATTLE">
+                                BOSS BATTLE
+                            </h3>
+                            <p className="text-xs md:text-sm font-mono text-white/80 border-l-2 border-cyber-violet pl-4 py-1">
+                                DERROTA A DON BUROCRACIO. <br className="hidden md:block" />
+                                CONSIGUE TUS DERECHOS.
+                            </p>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+
+          {/* OTHER TOOLS */}
           {tools.map((tool, index) => (
             <div 
                 key={index}
@@ -158,39 +201,6 @@ const LandingPage: React.FC = () => {
             </div>
           ))}
 
-           <div 
-                onClick={() => navigate('/simulator')}
-                className="group relative h-32 sm:h-40 md:h-48 cursor-pointer overflow-hidden rounded-xl bg-secondary/20 border border-white/5 backdrop-blur-sm transition-all duration-500 md:col-span-2 hover:border-cyber-violet group-hover:shadow-[0_0_30px_-5px_rgba(185,87,206,0.4)]"
-                style={{ animationDelay: "400ms" }}
-            >
-                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:blur-sm">
-                    <div className="flex items-start justify-between">
-                        <div className="p-1.5 md:p-2 rounded-md bg-white/5 text-cyber-violet">
-                            <Gamepad2 className="h-5 w-5 md:h-6 md:w-6" />
-                        </div>
-                        <span className="text-[9px] md:text-[10px] font-mono text-muted-foreground/50 border border-white/10 px-2 py-0.5 rounded">
-                           SIM_TRAINING
-                        </span>
-                    </div>
-                    <div>
-                        <h3 className="text-lg md:text-xl font-bold text-foreground/90 leading-tight">Entrenamiento de Negociación</h3>
-                        <p className="text-xs md:text-sm text-muted-foreground mt-1 leading-tight">Simulador de conflicto con El Sistema.</p>
-                    </div>
-                 </div>
-
-                 <div className="absolute inset-0 p-4 md:p-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/90 z-10">
-                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-                     <div className="flex items-center gap-4 md:gap-6">
-                        <Swords className="h-8 w-8 md:h-12 md:w-12 text-cyber-violet animate-pulse" />
-                        <div className="text-left">
-                             <h3 className="text-2xl md:text-3xl font-black tracking-widest uppercase glitch-text text-cyber-violet" data-text="BOSS BATTLE">
-                                BOSS BATTLE
-                            </h3>
-                            <p className="text-[10px] md:text-xs font-mono text-white/80">VENCE AL SISTEMA. CONSIGUE LO QUE ES TUYO.</p>
-                        </div>
-                     </div>
-                 </div>
-            </div>
         </div>
       </div>
 

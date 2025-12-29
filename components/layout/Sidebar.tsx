@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Wand2, SquareCheck, MessageCircleQuestion, LayoutDashboard, Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, Palette, Medal, Users2, BrainCircuit, Star, BookHeart, Settings, FileEdit, Sparkles, Home, Activity, Gamepad2, X, Swords } from 'lucide-react';
+import { Wand2, SquareCheck, MessageCircleQuestion, LayoutDashboard, Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, Palette, Medal, Users2, BrainCircuit, Star, BookHeart, Settings, FileEdit, Sparkles, Home, Activity, Gamepad2, X, Swords, Instagram, Facebook } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -78,6 +78,46 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
         />
     );
 
+    const renderInstagramLink = (isMobileView: boolean) => (
+        <a
+            href="https://www.instagram.com/paso.xti"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+                "flex items-center rounded-lg transition-all duration-300 relative overflow-hidden group w-full text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                isMobileView ? "flex-1 h-full flex-col justify-center p-1 text-[10px] gap-1" : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3")
+            )}
+            title="Síguenos en Instagram"
+        >
+            <Instagram className={cn(
+                "h-5 w-5 transition-all flex-shrink-0 group-hover:text-pink-500 group-hover:drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]",
+                isMobileView && "h-6 w-6"
+            )} />
+            {(!isCollapsed && !isMobileView) && <span className="ml-3 font-medium truncate">Instagram</span>}
+            {isMobileView && <span className="text-[9px] truncate max-w-full">Instagram</span>}
+        </a>
+    );
+
+    const renderFacebookLink = (isMobileView: boolean) => (
+        <a
+            href="https://www.facebook.com/profile.php?id=61585934602862"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+                "flex items-center rounded-lg transition-all duration-300 relative overflow-hidden group w-full text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                isMobileView ? "flex-1 h-full flex-col justify-center p-1 text-[10px] gap-1" : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3")
+            )}
+            title="Síguenos en Facebook"
+        >
+            <Facebook className={cn(
+                "h-5 w-5 transition-all flex-shrink-0 group-hover:text-blue-500 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]",
+                isMobileView && "h-6 w-6"
+            )} />
+            {(!isCollapsed && !isMobileView) && <span className="ml-3 font-medium truncate">Facebook</span>}
+            {isMobileView && <span className="text-[9px] truncate max-w-full">Facebook</span>}
+        </a>
+    );
+
     if (isMobile) {
         return (
             <>
@@ -125,7 +165,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
 
                 {/* Mobile Bottom Navigation */}
                 <nav className="fixed bottom-0 left-0 w-full h-16 bg-background/90 backdrop-blur-xl border-t border-border z-50 flex items-center justify-around px-2 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] pb-safe">
-                    {publicLinks.map(link => renderLink(link, true))}
+                    {/* Render subset on mobile to avoid overcrowding, or keep it if scroll/space allows */}
+                    {publicLinks.slice(0, 4).map(link => renderLink(link, true))}
+                    {renderInstagramLink(true)}
+                    {renderFacebookLink(true)}
                     {isAuthenticated && (
                          <button
                             onClick={() => setShowMobileAdminMenu(!showMobileAdminMenu)}
@@ -166,7 +209,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
             </div>
             
             <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                <div className="mb-2 px-3">
+                    <span className={cn("text-[9px] font-bold text-muted-foreground/40 uppercase tracking-[0.2em]", isCollapsed && "hidden")}>
+                        Protocolos
+                    </span>
+                </div>
                 {publicLinks.map(l => renderLink(l, false))}
+                
+                <div className="my-4 border-t border-border/50 relative">
+                    <span className={cn("absolute -top-3 left-4 bg-background/80 px-2 text-[9px] text-muted-foreground/50 font-mono uppercase tracking-widest", isCollapsed && "hidden")}>
+                        Social
+                    </span>
+                </div>
+                {renderInstagramLink(false)}
+                {renderFacebookLink(false)}
                 
                 {isAuthenticated && (
                     <>
