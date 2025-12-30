@@ -10,6 +10,18 @@ export interface BingoTile {
   marked: boolean;
 }
 
+export interface RealityPost {
+  id: string;
+  text: string;
+  reactions: {
+    cafe: number;
+    hartazgo: number;
+    apoyo: number;
+  };
+  createdAt: string;
+  isFeatured?: boolean;
+}
+
 export interface CampaignPost {
   id: string;
   platform: string;

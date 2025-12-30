@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Wand2, SquareCheck, MessageCircleQuestion, LayoutDashboard, Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, Palette, Medal, Users2, BrainCircuit, Star, BookHeart, Settings, FileEdit, Sparkles, Home, Activity, Gamepad2, X, Swords, Instagram, Facebook } from 'lucide-react';
+import { Wand2, SquareCheck, MessageCircleQuestion, LayoutDashboard, Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, Palette, Medal, Users2, BrainCircuit, Star, BookHeart, Settings, FileEdit, Sparkles, Home, Activity, Gamepad2, X, Swords, Instagram, Facebook, StickyNote } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -9,6 +9,7 @@ import Logo from '../ui/Logo';
 
 const publicLinks = [
   { to: '/', icon: Home, text: 'Inicio' },
+  { to: '/muro', icon: StickyNote, text: 'Muro Realidad' },
   { to: '/validator', icon: Wand2, text: 'Validador' },
   { to: '/bingo', icon: SquareCheck, text: 'Bingo' },
   { to: '/consultorio', icon: MessageCircleQuestion, text: 'Consultorio' },
@@ -18,6 +19,7 @@ const publicLinks = [
 
 const adminLinks = [
   { to: '/dashboard', icon: LayoutDashboard, text: 'Dashboard' },
+  { to: '/muro-admin', icon: StickyNote, text: 'Muro Admin' },
   { to: '/acronym-generator', icon: Sparkles, text: 'Generador' },
   { to: '/script-generator', icon: Bot, text: 'Contenido' },
   { to: '/poster-generator', icon: Palette, text: 'Carteles' },

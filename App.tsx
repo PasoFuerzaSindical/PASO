@@ -29,6 +29,8 @@ import PageManagementPage from './pages/PageManagementPage';
 import AcronymGeneratorPage from './pages/AcronymGeneratorPage';
 import SimulatorPage from './pages/SimulatorPage'; 
 import SimulatorAdminPage from './pages/SimulatorAdminPage'; 
+import RealityWallPage from './pages/RealityWallPage';
+import RealityWallAdminPage from './pages/RealityWallAdminPage';
 
 const getPageTitle = (pathname: string): string => {
   if (pathname.startsWith('/content/')) return 'Contenido Exclusivo';
@@ -37,6 +39,7 @@ const getPageTitle = (pathname: string): string => {
     case '/validator': return 'Validador de Acrónimos';
     case '/bingo': return 'Bingo del Precariado';
     case '/consultorio': return 'Consultorio Anónimo';
+    case '/muro': return 'Muro de la Realidad';
     case '/simulator': return 'Simulador del Sistema';
     case '/filosofia': return 'Filosofía P.A.S.O.';
     case '/login': return 'Acceso Administrador';
@@ -50,6 +53,7 @@ const getPageTitle = (pathname: string): string => {
     case '/personajes': return 'Personajes de Campaña';
     case '/exclusive-content': return 'Contenido Exclusivo';
     case '/consultorio-admin': return 'Revisión del Consultorio';
+    case '/muro-admin': return 'Gestión del Muro';
     case '/settings': return 'Configuración General';
     case '/page-management': return 'Gestión de Páginas';
     case '/simulator-admin': return 'Config. Simulador';
@@ -83,6 +87,7 @@ const App: React.FC = () => {
                 <Route path="validator" element={<AcronymValidatorPage />} />
                 <Route path="bingo" element={<BingoPage />} />
                 <Route path="consultorio" element={<ConsultorioPage />} />
+                <Route path="muro" element={<RealityWallPage />} />
                 <Route path="simulator" element={<SimulatorPage />} />
                 <Route path="filosofia" element={<FilosofiaPage />} />
                 <Route path="content/:id" element={<ExclusiveContentViewerPage />} />
@@ -99,6 +104,7 @@ const App: React.FC = () => {
                   <Route path="personajes" element={<PersonajesPage />} />
                   <Route path="exclusive-content" element={<ExclusiveContentAdminPage />} />
                   <Route path="consultorio-admin" element={<ConsultorioAdminPage />} />
+                  <Route path="muro-admin" element={<RealityWallAdminPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="page-management" element={<PageManagementPage />} />
                   <Route path="simulator-admin" element={<SimulatorAdminPage />} />
