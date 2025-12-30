@@ -37,7 +37,10 @@ const RealityWallPage: React.FC = () => {
     const [newPost, setNewPost] = useState('');
     const [isPosting, setIsPosting] = useState(false);
     const [sharingPost, setSharingPost] = useState<RealityPost | null>(null);
-    const [webhookUrl] = useLocalStorage<string>('paso-webhook-url', '');
+    
+    // Defaulting to user's provided webhook
+    const [webhookUrl] = useLocalStorage<string>('paso-webhook-url', 'https://discord.com/api/webhooks/1455616560440938744/4sG3-kIsF6blUl001FNCJmBb8dIaBPDDQHOK73k8qJUbFZdfnW8CU0OtYC2G7_sw8nX_');
+    
     const storyRef = useRef<HTMLDivElement>(null);
 
     const handlePost = (e: React.FormEvent) => {
@@ -54,8 +57,8 @@ const RealityWallPage: React.FC = () => {
         const acronym = getStableAcronym(post.id);
         setPosts(prev => [post, ...prev]);
         
-        // Alerta de Telemetría
-        sendGlobalAlert(webhookUrl, "Nueva Verdad en el Muro", `**Mensaje:** "${post.text}"\n**Veredicto:** ${acronym}`, 10223616);
+        // Alerta de Telemetría con Acrónimo incluido
+        sendGlobalAlert(webhookUrl, "Nueva Verdad en el Muro", `**Mensaje:** "${post.text}"\n**Veredicto P.A.S.O.:** ${acronym}`, 10223616);
 
         setNewPost('');
         setIsPosting(false);
@@ -93,39 +96,39 @@ const RealityWallPage: React.FC = () => {
         <div className="container mx-auto max-w-5xl space-y-8 pb-20">
             {/* Header / Intro */}
             <div className="text-center space-y-4">
-                <h1 className="text-4xl font-black tracking-tighter uppercase italic">Muro de la Realidad</h1>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
-                    La sanidad no son solo aplausos o quejas en el pasillo. Aquí escribimos las verdades que el sistema intenta ignorar. Anónimo. Directo. Real.
+                <h1 className="text-4xl font-black tracking-tighter uppercase italic text-brand-green">Muro de la Realidad</h1>
+                <p className="text-muted-foreground max-w-2xl mx-auto font-mono text-sm uppercase tracking-widest">
+                    La sanidad no son solo aplausos o quejas en el pasillo. Aquí escribimos las verdades que el sistema intenta ignorar.
                 </p>
                 <div className="flex justify-center gap-4">
-                    <Button onClick={() => setIsPosting(true)} className="bg-brand-green text-black font-bold h-12 px-8 text-lg hover:scale-105 transition-transform">
-                        <MessageSquarePlus className="mr-2 h-6 w-6" /> Publicar mi verdad
+                    <Button onClick={() => setIsPosting(true)} className="bg-brand-green text-black font-black h-12 px-8 text-lg hover:scale-105 transition-transform shadow-[0_0_20px_rgba(10,255,96,0.3)]">
+                        <MessageSquarePlus className="mr-2 h-6 w-6" /> PUBLICAR MI VERDAD
                     </Button>
                 </div>
             </div>
 
             {/* Posting Modal/Area */}
             {isPosting && (
-                <Card className="animate-in fade-in slide-in-from-top-4 border-brand-green/50 shadow-[0_0_20px_rgba(10,255,96,0.1)]">
+                <Card className="animate-in fade-in slide-in-from-top-4 border-brand-green/50 shadow-[0_0_30px_rgba(10,255,96,0.1)] bg-black/60 backdrop-blur-xl">
                     <form onSubmit={handlePost}>
                         <CardHeader>
-                            <CardTitle>¿Qué está pasando realmente?</CardTitle>
-                            <CardDescription>Máximo 150 caracteres. Mantén el anonimato de pacientes y compañeros.</CardDescription>
+                            <CardTitle className="text-brand-green">¿QUÉ ESTÁ PASANDO REALMENTE?</CardTitle>
+                            <CardDescription className="font-mono text-[10px] uppercase">Máximo 150 caracteres. Mantén el anonimato de pacientes y compañeros.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Textarea 
                                 value={newPost}
                                 onChange={(e) => setNewPost(e.target.value.slice(0, 150))}
                                 placeholder="Ej: Tercera noche doblando turno porque no cubren la baja..."
-                                className="text-xl font-medium border-brand-green/20 focus:border-brand-green"
+                                className="text-xl font-bold border-brand-green/20 focus:border-brand-green bg-black/40 text-foreground"
                                 rows={3}
                                 autoFocus
                             />
-                            <p className="text-right text-xs text-muted-foreground mt-2 font-mono">{newPost.length}/150</p>
+                            <p className="text-right text-[10px] text-brand-green/50 mt-2 font-mono uppercase tracking-tighter">{newPost.length}/150 CHARS</p>
                         </CardContent>
                         <CardFooter className="justify-end gap-2">
-                            <Button type="button" variant="ghost" onClick={() => setIsPosting(false)}>Cancelar</Button>
-                            <Button type="submit" disabled={!newPost.trim()} className="bg-brand-green text-black font-bold">Publicar en el Muro</Button>
+                            <Button type="button" variant="ghost" onClick={() => setIsPosting(false)} className="font-bold uppercase text-xs">Cancelar</Button>
+                            <Button type="submit" disabled={!newPost.trim()} className="bg-brand-green text-black font-black uppercase">Publicar en el Muro</Button>
                         </CardFooter>
                     </form>
                 </Card>
@@ -136,35 +139,35 @@ const RealityWallPage: React.FC = () => {
                 {posts.map(post => {
                     const acronym = getStableAcronym(post.id);
                     return (
-                        <Card key={post.id} className="break-inside-avoid animate-fade-in hover:border-brand-green/40 transition-all group relative overflow-hidden">
+                        <Card key={post.id} className="break-inside-avoid animate-fade-in hover:border-brand-green/40 transition-all group relative overflow-hidden bg-card/40 backdrop-blur-md">
                             <CardContent className="pt-8 pb-4 space-y-4">
-                                <p className="text-xl font-bold italic leading-tight text-foreground/90">"{post.text}"</p>
-                                <div className="pt-2 flex items-start gap-2 border-t border-brand-green/10">
+                                <p className="text-xl font-black italic leading-[1.1] text-foreground/90 uppercase tracking-tighter">"{post.text}"</p>
+                                <div className="pt-3 flex items-start gap-2 border-t border-brand-green/10">
                                     <ShieldAlert className="h-4 w-4 text-brand-green mt-0.5 shrink-0" />
-                                    <p className="text-[10px] font-mono font-bold text-brand-green uppercase tracking-tighter">
-                                        Veredicto P.A.S.O.: <span className="text-foreground">{acronym}</span>
+                                    <p className="text-[10px] font-mono font-bold text-brand-green uppercase tracking-tighter leading-tight">
+                                        VEREDICTO P.A.S.O.: <span className="text-foreground">{acronym}</span>
                                     </p>
                                 </div>
                             </CardContent>
-                            <CardFooter className="flex justify-between border-t border-border/50 py-3 bg-secondary/10">
+                            <CardFooter className="flex justify-between border-t border-border/20 py-3 bg-secondary/5">
                                 <div className="flex gap-2">
                                     <button 
                                         onClick={() => handleReaction(post.id, 'cafe')}
-                                        className="flex items-center gap-1.5 text-xs font-bold hover:text-orange-400 transition-colors bg-secondary/30 px-2 py-1 rounded-full"
+                                        className="flex items-center gap-1.5 text-[10px] font-black hover:text-orange-400 transition-colors bg-white/5 px-2.5 py-1 rounded-full uppercase tracking-tighter"
                                         title="Necesito un café"
                                     >
                                         <Coffee className="h-4 w-4" /> {post.reactions.cafe}
                                     </button>
                                     <button 
                                         onClick={() => handleReaction(post.id, 'hartazgo')}
-                                        className="flex items-center gap-1.5 text-xs font-bold hover:text-brand-red transition-colors bg-secondary/30 px-2 py-1 rounded-full"
+                                        className="flex items-center gap-1.5 text-[10px] font-black hover:text-brand-red transition-colors bg-white/5 px-2.5 py-1 rounded-full uppercase tracking-tighter"
                                         title="Estoy harto/a"
                                     >
                                         <Zap className="h-4 w-4" /> {post.reactions.hartazgo}
                                     </button>
                                     <button 
                                         onClick={() => handleReaction(post.id, 'apoyo')}
-                                        className="flex items-center gap-1.5 text-xs font-bold hover:text-brand-green transition-colors bg-secondary/30 px-2 py-1 rounded-full"
+                                        className="flex items-center gap-1.5 text-[10px] font-black hover:text-brand-green transition-colors bg-white/5 px-2.5 py-1 rounded-full uppercase tracking-tighter"
                                         title="Te entiendo"
                                     >
                                         <Heart className="h-4 w-4" /> {post.reactions.apoyo}
@@ -173,11 +176,11 @@ const RealityWallPage: React.FC = () => {
                                 <Button 
                                     variant="ghost" 
                                     size="icon" 
-                                    className="h-9 w-9 text-muted-foreground hover:text-brand-green hover:bg-brand-green/10 rounded-full"
+                                    className="h-8 w-8 text-muted-foreground hover:text-brand-green hover:bg-brand-green/10 rounded-full"
                                     onClick={() => setSharingPost(post)}
                                     title="Generar Story"
                                 >
-                                    <Share2 className="h-5 w-5" />
+                                    <Share2 className="h-4 w-4" />
                                 </Button>
                             </CardFooter>
                         </Card>
@@ -216,7 +219,7 @@ const RealityWallPage: React.FC = () => {
                                 </div>
                                 
                                 <div className="space-y-4">
-                                    <h2 className="text-3xl font-black italic tracking-tighter text-white leading-[1.1] drop-shadow-2xl">
+                                    <h2 className="text-3xl font-black italic tracking-tighter text-white leading-[1.1] drop-shadow-2xl uppercase">
                                         "{sharingPost.text}"
                                     </h2>
                                     <p className="text-brand-green font-mono text-xs font-bold bg-brand-green/10 py-2 px-4 border border-brand-green/30 inline-block rounded uppercase tracking-tighter">
@@ -247,7 +250,7 @@ const RealityWallPage: React.FC = () => {
                                     <p className="text-brand-green font-black text-2xl tracking-tighter drop-shadow-[0_0_10px_rgba(10,255,96,0.3)]">P.A.S.O.</p>
                                     <p className="text-white/40 text-[8px] font-mono leading-tight tracking-wider px-4">SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO</p>
                                     {campaignPhase === 'Revelacion' && (
-                                        <p className="text-brand-red font-black text-[9px] mt-2 tracking-widest border border-brand-red/30 py-1 px-2 inline-block">UNA INICIATIVA DE UGT SANIDAD</p>
+                                        <p className="text-brand-red font-black text-[9px] mt-2 tracking-widest border border-brand-red/30 py-1 px-2 inline-block uppercase">UNA INICIATIVA DE UGT SANIDAD</p>
                                     )}
                                 </div>
                             </div>

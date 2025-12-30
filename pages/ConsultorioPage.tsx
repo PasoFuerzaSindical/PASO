@@ -12,6 +12,7 @@ import { useCampaign } from '../contexts/CampaignContext';
 import useLocalStorage from '../hooks/useLocalStorage';
 import Typewriter from '../components/ui/Typewriter';
 import { cn } from '../lib/utils';
+import { sendGlobalAlert } from '../services/webhookService';
 
 const ConsultorioPage: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -20,6 +21,7 @@ const ConsultorioPage: React.FC = () => {
   const [result, setResult] = useState<SurrealConsultationResult | null>(null);
   const { campaignPhase } = useCampaign();
   const [, setSavedConsultations] = useLocalStorage<SavedConsultation[]>('saved-consultations', []);
+  const [webhookUrl] = useLocalStorage<string>('paso-webhook-url', 'https://discord.com/api/webhooks/1455616560440938744/4sG3-kIsF6blUl001FNCJmBb8dIaBPDDQHOK73k8qJUbFZdfnW8CU0OtYC2G7_sw8nX_');
   
   // Audio Recording State
   const [isRecording, setIsRecording] = useState(false);
@@ -41,7 +43,7 @@ const ConsultorioPage: React.FC = () => {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'audio/webm' }); // Browser typically records webm/ogg
+        const blob = new Blob(chunks, { type: 'audio/webm' }); 
         setAudioBlob(blob);
         stream.getTracks().forEach(track => track.stop());
       };
@@ -85,7 +87,6 @@ const ConsultorioPage: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
-        // remove data url prefix
         const base64 = base64String.split(',')[1];
         resolve(base64);
       };
@@ -114,6 +115,9 @@ const ConsultorioPage: React.FC = () => {
       const response = await handleSurrealConsultation(inputData, campaignPhase, isAudio);
       setResult(response);
       
+      // Telemetría de Consulta
+      sendGlobalAlert(webhookUrl, "Consulta al Oráculo", `Un usuario ha consultado:\n"${isAudio ? "[AUDIO]" : query}"\n\n**Respuesta:** ${response.text.substring(0, 500)}...`, 15105570);
+
       // Clean up audio after success
       if (audioBlob) resetRecording();
 
@@ -145,7 +149,6 @@ const ConsultorioPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             
-            {/* Input Area Swapper */}
             {audioBlob ? (
                 <div className="p-6 border-2 border-ugt-green rounded-md flex items-center justify-between bg-secondary/30 animate-pulse">
                     <div className="flex items-center gap-4">

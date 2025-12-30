@@ -12,6 +12,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { useCampaign } from '../contexts/CampaignContext';
 // @ts-ignore - htmlToImage is imported from CDN
 import * as htmlToImage from 'html-to-image';
+import { sendGlobalAlert } from '../services/webhookService';
 
 const generateBingoCard = (phrases: string[]): BingoTile[][] => {
     const shuffled = [...phrases].sort(() => 0.5 - Math.random());
@@ -49,6 +50,7 @@ const BingoPage: React.FC = () => {
     const [isGeneratingPrize, setIsGeneratingPrize] = useState(false);
     const [diplomaContent, setDiplomaContent] = useState<DiplomaContent | null>(null);
     const [bingoTheme] = useLocalStorage('bingo-theme', 'La Precariedad Cotidiana');
+    const [webhookUrl] = useLocalStorage<string>('paso-webhook-url', 'https://discord.com/api/webhooks/1455616560440938744/4sG3-kIsF6blUl001FNCJmBb8dIaBPDDQHOK73k8qJUbFZdfnW8CU0OtYC2G7_sw8nX_');
     const { campaignPhase } = useCampaign();
 
     const bingoCardRef = useRef < HTMLDivElement > (null);
@@ -111,6 +113,10 @@ const BingoPage: React.FC = () => {
                     const content = await generateDiplomaContent(bingoTheme, campaignPhase);
                     setDiplomaContent(content);
                     setHasWon(true);
+                    
+                    // Telemetría de Bingo
+                    sendGlobalAlert(webhookUrl, "¡BINGO CANTADO!", `Un usuario ha completado un cartón sobre el tema: **${bingoTheme}**.\nFase: ${campaignPhase}`, 5763719);
+
                 } catch (e) {
                     setDiplomaContent({ 
                         title: "Certificado de Resiliencia", 
@@ -123,7 +129,7 @@ const BingoPage: React.FC = () => {
             };
             generatePrize();
         }
-    }, [card, hasWon, bingoTheme, campaignPhase]);
+    }, [card, hasWon, bingoTheme, campaignPhase, webhookUrl]);
     
     if (loading) return <div className="container mx-auto max-w-4xl text-center py-20"><Loader text="Generando cartón temático..." /></div>;
     

@@ -15,8 +15,8 @@ const SettingsPage: React.FC = () => {
     const [newUsername, setNewUsername] = useState('');
     const [newAdminPassword, setNewAdminPassword] = useState('');
     
-    // Webhook Configuration
-    const [webhookUrl, setWebhookUrl] = useLocalStorage<string>('paso-webhook-url', '');
+    // Webhook Configuration - Default set to user provided URL
+    const [webhookUrl, setWebhookUrl] = useLocalStorage<string>('paso-webhook-url', 'https://discord.com/api/webhooks/1455616560440938744/4sG3-kIsF6blUl001FNCJmBb8dIaBPDDQHOK73k8qJUbFZdfnW8CU0OtYC2G7_sw8nX_');
     
     // Change Password State
     const [currentPassword, setCurrentPassword] = useState('');
