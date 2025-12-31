@@ -34,6 +34,7 @@ import RealityWallPage from './pages/RealityWallPage';
 import RealityWallAdminPage from './pages/RealityWallAdminPage';
 import RadioAdminPage from './pages/RadioAdminPage';
 import AudioPlayer from './components/layout/AudioPlayer';
+import WelcomeAudioModal from './components/ui/WelcomeAudioModal';
 
 const getPageTitle = (pathname: string): string => {
   if (pathname.startsWith('/content/')) return 'Contenido Exclusivo';
@@ -73,6 +74,7 @@ const MainAppLayout: React.FC = () => {
         <MainLayout pageTitle={pageTitle}>
             <Outlet />
             <AudioPlayer />
+            <WelcomeAudioModal />
         </MainLayout>
     );
 };
