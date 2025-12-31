@@ -5,6 +5,7 @@ import { HashRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom
 import { AuthProvider } from './contexts/AuthContext';
 import { CampaignProvider } from './contexts/CampaignContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { MusicProvider } from './contexts/MusicContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 
@@ -31,6 +32,8 @@ import SimulatorPage from './pages/SimulatorPage';
 import SimulatorAdminPage from './pages/SimulatorAdminPage'; 
 import RealityWallPage from './pages/RealityWallPage';
 import RealityWallAdminPage from './pages/RealityWallAdminPage';
+import RadioAdminPage from './pages/RadioAdminPage';
+import AudioPlayer from './components/layout/AudioPlayer';
 
 const getPageTitle = (pathname: string): string => {
   if (pathname.startsWith('/content/')) return 'Contenido Exclusivo';
@@ -57,6 +60,7 @@ const getPageTitle = (pathname: string): string => {
     case '/settings': return 'Configuración General';
     case '/page-management': return 'Gestión de Páginas';
     case '/simulator-admin': return 'Config. Simulador';
+    case '/radio-admin': return 'Consola de Frecuencias';
     default: return 'P.A.S.O.';
   }
 };
@@ -68,6 +72,7 @@ const MainAppLayout: React.FC = () => {
     return (
         <MainLayout pageTitle={pageTitle}>
             <Outlet />
+            <AudioPlayer />
         </MainLayout>
     );
 };
@@ -78,39 +83,42 @@ const App: React.FC = () => {
       <ThemeProvider defaultTheme="dark" storageKey="paso-ui-theme">
         <AuthProvider>
           <CampaignProvider>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              
-              <Route path="/" element={<MainAppLayout />}>
-                {/* Public Routes */}
-                <Route index element={<LandingPage />} />
-                <Route path="validator" element={<AcronymValidatorPage />} />
-                <Route path="bingo" element={<BingoPage />} />
-                <Route path="consultorio" element={<ConsultorioPage />} />
-                <Route path="muro" element={<RealityWallPage />} />
-                <Route path="simulator" element={<SimulatorPage />} />
-                <Route path="filosofia" element={<FilosofiaPage />} />
-                <Route path="content/:id" element={<ExclusiveContentViewerPage />} />
+            <MusicProvider>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                
+                <Route path="/" element={<MainAppLayout />}>
+                  {/* Public Routes */}
+                  <Route index element={<LandingPage />} />
+                  <Route path="validator" element={<AcronymValidatorPage />} />
+                  <Route path="bingo" element={<BingoPage />} />
+                  <Route path="consultorio" element={<ConsultorioPage />} />
+                  <Route path="muro" element={<RealityWallPage />} />
+                  <Route path="simulator" element={<SimulatorPage />} />
+                  <Route path="filosofia" element={<FilosofiaPage />} />
+                  <Route path="content/:id" element={<ExclusiveContentViewerPage />} />
 
-                {/* Protected Admin Routes */}
-                <Route element={<ProtectedRoute />}>
-                  <Route path="dashboard" element={<DashboardPage />} />
-                  <Route path="acronym-generator" element={<AcronymGeneratorPage />} />
-                  <Route path="script-generator" element={<ScriptGeneratorPage />} />
-                  <Route path="gallery" element={<GalleryPage />} />
-                  <Route path="strategy" element={<StrategyPage />} />
-                  <Route path="poster-generator" element={<PosterGeneratorPage />} />
-                  <Route path="diploma-editor" element={<DiplomaEditorPage />} />
-                  <Route path="personajes" element={<PersonajesPage />} />
-                  <Route path="exclusive-content" element={<ExclusiveContentAdminPage />} />
-                  <Route path="consultorio-admin" element={<ConsultorioAdminPage />} />
-                  <Route path="muro-admin" element={<RealityWallAdminPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                  <Route path="page-management" element={<PageManagementPage />} />
-                  <Route path="simulator-admin" element={<SimulatorAdminPage />} />
+                  {/* Protected Admin Routes */}
+                  <Route element={<ProtectedRoute />}>
+                    <Route path="dashboard" element={<DashboardPage />} />
+                    <Route path="acronym-generator" element={<AcronymGeneratorPage />} />
+                    <Route path="script-generator" element={<ScriptGeneratorPage />} />
+                    <Route path="gallery" element={<GalleryPage />} />
+                    <Route path="strategy" element={<StrategyPage />} />
+                    <Route path="poster-generator" element={<PosterGeneratorPage />} />
+                    <Route path="diploma-editor" element={<DiplomaEditorPage />} />
+                    <Route path="personajes" element={<PersonajesPage />} />
+                    <Route path="exclusive-content" element={<ExclusiveContentAdminPage />} />
+                    <Route path="consultorio-admin" element={<ConsultorioAdminPage />} />
+                    <Route path="muro-admin" element={<RealityWallAdminPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="page-management" element={<PageManagementPage />} />
+                    <Route path="simulator-admin" element={<SimulatorAdminPage />} />
+                    <Route path="radio-admin" element={<RadioAdminPage />} />
+                  </Route>
                 </Route>
-              </Route>
-            </Routes>
+              </Routes>
+            </MusicProvider>
           </CampaignProvider>
         </AuthProvider>
       </ThemeProvider>

@@ -1,7 +1,13 @@
 
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Wand2, SquareCheck, MessageCircleQuestion, LayoutDashboard, Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, Palette, Medal, Users2, BrainCircuit, Star, BookHeart, Settings, FileEdit, Sparkles, Home, Activity, Gamepad2, X, Swords, Instagram, Facebook, StickyNote } from 'lucide-react';
+import { 
+  Wand2, SquareCheck, MessageCircleQuestion, LayoutDashboard, 
+  Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, 
+  Palette, Medal, Users2, BrainCircuit, Star, BookHeart, 
+  Settings, FileEdit, Sparkles, Home, Gamepad2, X, Swords, 
+  Instagram, Facebook, StickyNote, Activity, ShieldCheck, Radio
+} from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -19,6 +25,7 @@ const publicLinks = [
 
 const adminLinks = [
   { to: '/dashboard', icon: LayoutDashboard, text: 'Dashboard' },
+  { to: '/radio-admin', icon: Radio, text: 'Frecuencias' },
   { to: '/muro-admin', icon: StickyNote, text: 'Muro Admin' },
   { to: '/acronym-generator', icon: Sparkles, text: 'Generador' },
   { to: '/script-generator', icon: Bot, text: 'Contenido' },
@@ -44,6 +51,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
     const isMobile = useMediaQuery('(max-width: 768px)');
     const [showMobileAdminMenu, setShowMobileAdminMenu] = useState(false);
 
+    const SectionHeader = ({ label }: { label: string }) => (
+      <div className={cn(
+        "flex items-center gap-2 mt-6 mb-2 px-3",
+        isCollapsed && "justify-center px-0"
+      )}>
+        {!isCollapsed ? (
+          <>
+            <div className="h-[1px] w-4 bg-brand-green/30"></div>
+            <span className="text-[10px] font-black text-brand-green/60 uppercase tracking-[0.2em] whitespace-nowrap">
+              {label}
+            </span>
+            <div className="h-[1px] flex-1 bg-brand-green/10"></div>
+          </>
+        ) : (
+          <div className="h-[1px] w-8 bg-brand-green/20"></div>
+        )}
+      </div>
+    );
+
     const renderLink = (link: typeof publicLinks[0], isMobileView: boolean) => (
         <NavLink
             key={link.text}
@@ -55,68 +81,56 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                     isMobileView ? "h-full" : "",
                     
                     isActive 
-                        ? "text-brand-green bg-brand-green/10 shadow-[0_0_15px_-5px_rgba(10,255,96,0.5)] border border-brand-green/20" 
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                        ? "text-brand-green bg-brand-green/10 shadow-[0_0_15px_-5px_rgba(10,255,96,0.3)] border border-brand-green/20" 
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/[0.03]",
                     
                     isMobileView 
                         ? "flex-col justify-center p-1 text-[10px] gap-1"
-                        : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3")
+                        : cn("p-2.5 my-0.5", isCollapsed ? "justify-center" : "justify-start pl-4")
                 )}>
                     <link.icon className={cn(
                         "h-5 w-5 transition-all flex-shrink-0", 
-                        isActive ? "drop-shadow-[0_0_5px_rgba(10,255,96,0.8)]" : "group-hover:text-foreground",
+                        isActive ? "drop-shadow-[0_0_8px_rgba(10,255,96,0.8)] scale-110" : "group-hover:text-foreground",
                         isMobileView && "h-6 w-6"
                     )} />
-                    {(!isCollapsed && !isMobileView) && <span className="ml-3 font-medium truncate">{link.text}</span>}
-                    {isMobileView && <span className="text-[9px] truncate max-w-full">{link.text}</span>}
+                    {(!isCollapsed && !isMobileView) && (
+                      <span className={cn(
+                        "ml-3 text-sm font-medium truncate tracking-tight transition-all",
+                        isActive ? "font-bold" : "font-normal"
+                      )}>
+                        {link.text}
+                      </span>
+                    )}
+                    {isMobileView && <span className="text-[9px] truncate max-w-full font-bold">{link.text}</span>}
                     
                     {isActive && !isMobileView && (
                         <div className="absolute left-0 top-0 h-full w-1 bg-brand-green shadow-[0_0_10px_#0aff60]"></div>
                     )}
                 </div>
             )}
-            className={isMobileView ? "flex-1 h-full" : "block w-full"}
+            className={isMobileView ? "flex-1 h-full" : "block w-full px-1"}
             title={link.text}
         />
     );
 
-    const renderInstagramLink = (isMobileView: boolean) => (
+    const renderSocialLink = (icon: any, text: string, url: string, colorClass: string, isMobileView: boolean) => (
         <a
-            href="https://www.instagram.com/paso.xti"
+            href={url}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-                "flex items-center rounded-lg transition-all duration-300 relative overflow-hidden group w-full text-muted-foreground hover:text-foreground hover:bg-secondary/50",
-                isMobileView ? "flex-1 h-full flex-col justify-center p-1 text-[10px] gap-1" : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3")
+                "flex items-center rounded-lg transition-all duration-300 relative overflow-hidden group w-full text-muted-foreground hover:text-foreground hover:bg-white/[0.03]",
+                isMobileView ? "flex-1 h-full flex-col justify-center p-1 text-[10px] gap-1" : cn("p-2.5 my-0.5", isCollapsed ? "justify-center" : "justify-start pl-4")
             )}
-            title="Síguenos en Instagram"
+            title={`Síguenos en ${text}`}
         >
-            <Instagram className={cn(
-                "h-5 w-5 transition-all flex-shrink-0 group-hover:text-pink-500 group-hover:drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]",
-                isMobileView && "h-6 w-6"
-            )} />
-            {(!isCollapsed && !isMobileView) && <span className="ml-3 font-medium truncate">Instagram</span>}
-            {isMobileView && <span className="text-[9px] truncate max-w-full">Instagram</span>}
-        </a>
-    );
-
-    const renderFacebookLink = (isMobileView: boolean) => (
-        <a
-            href="https://www.facebook.com/profile.php?id=61585934602862"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-                "flex items-center rounded-lg transition-all duration-300 relative overflow-hidden group w-full text-muted-foreground hover:text-foreground hover:bg-secondary/50",
-                isMobileView ? "flex-1 h-full flex-col justify-center p-1 text-[10px] gap-1" : cn("p-2 my-1", isCollapsed ? "justify-center" : "justify-start pl-3")
-            )}
-            title="Síguenos en Facebook"
-        >
-            <Facebook className={cn(
-                "h-5 w-5 transition-all flex-shrink-0 group-hover:text-blue-500 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]",
-                isMobileView && "h-6 w-6"
-            )} />
-            {(!isCollapsed && !isMobileView) && <span className="ml-3 font-medium truncate">Facebook</span>}
-            {isMobileView && <span className="text-[9px] truncate max-w-full">Facebook</span>}
+            <div className={cn("transition-all duration-300 flex items-center justify-center", isMobileView ? "h-6 w-6" : "h-5 w-5")}>
+              {React.createElement(icon, {
+                className: cn("h-full w-full flex-shrink-0 transition-all", colorClass)
+              })}
+            </div>
+            {(!isCollapsed && !isMobileView) && <span className="ml-3 text-sm font-medium truncate">{text}</span>}
+            {isMobileView && <span className="text-[9px] truncate max-w-full">{text}</span>}
         </a>
     );
 
@@ -125,37 +139,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
             <>
                 {/* Mobile Admin Overlay Menu */}
                 {isAuthenticated && showMobileAdminMenu && (
-                    <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl flex flex-col animate-fade-in">
-                        <div className="flex items-center justify-between p-4 border-b border-border bg-secondary/20">
-                            <h2 className="text-lg font-bold text-brand-red flex items-center gap-2 font-mono tracking-wider">
-                                <Settings className="h-5 w-5 animate-spin-slow" /> ZONA DE MANDO
+                    <div className="fixed inset-0 z-[60] bg-background/98 backdrop-blur-2xl flex flex-col animate-fade-in">
+                        <div className="flex items-center justify-between p-5 border-b border-white/5 bg-secondary/20">
+                            <h2 className="text-lg font-black text-brand-red flex items-center gap-3 font-mono tracking-widest">
+                                <Activity className="h-5 w-5 animate-pulse" /> CENTRO DE CONTROL
                             </h2>
                             <button 
                                 onClick={() => setShowMobileAdminMenu(false)}
-                                className="p-2 rounded-full bg-secondary text-foreground hover:bg-secondary/80 border border-border active:scale-95 transition-all"
+                                className="p-2 rounded-xl bg-white/5 text-foreground hover:bg-white/10 border border-white/10 active:scale-95 transition-all"
                             >
                                 <X className="h-6 w-6" />
                             </button>
                         </div>
                         
-                        <div className="flex-1 overflow-y-auto p-4 pb-24">
-                            <div className="grid grid-cols-3 gap-3">
+                        <div className="flex-1 overflow-y-auto p-5 pb-24">
+                            <div className="grid grid-cols-3 gap-4">
                                 {adminLinks.map(link => (
                                     <NavLink
                                         key={link.text}
                                         to={link.to}
                                         onClick={() => setShowMobileAdminMenu(false)}
                                         className={({ isActive }) => cn(
-                                            "flex flex-col items-center justify-center p-3 rounded-xl border bg-secondary/30 gap-2 text-center transition-all duration-200 aspect-square",
+                                            "flex flex-col items-center justify-center p-4 rounded-2xl border bg-white/5 gap-3 text-center transition-all duration-300 aspect-square",
                                             isActive 
-                                                ? "border-brand-red text-brand-red shadow-[0_0_15px_rgba(255,15,75,0.3)] bg-brand-red/10" 
-                                                : "border-border text-muted-foreground hover:bg-secondary hover:text-foreground hover:border-brand-red/50"
+                                                ? "border-brand-red text-brand-red shadow-[0_0_20px_rgba(255,15,75,0.2)] bg-brand-red/10" 
+                                                : "border-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground"
                                         )}
                                     >
                                         {({ isActive }) => (
                                             <>
-                                                <link.icon className={cn("h-8 w-8 mb-1", isActive ? "text-brand-red" : "text-muted-foreground")} />
-                                                <span className="text-[10px] font-medium leading-tight">{link.text}</span>
+                                                <link.icon className={cn("h-8 w-8", isActive ? "text-brand-red" : "text-muted-foreground/60")} />
+                                                <span className="text-[10px] font-black leading-tight uppercase tracking-tighter">{link.text}</span>
                                             </>
                                         )}
                                     </NavLink>
@@ -166,24 +180,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                 )}
 
                 {/* Mobile Bottom Navigation */}
-                <nav className="fixed bottom-0 left-0 w-full h-16 bg-background/90 backdrop-blur-xl border-t border-border z-50 flex items-center justify-around px-2 shadow-[0_-5px_20px_rgba(0,0,0,0.1)] pb-safe">
-                    {/* Render subset on mobile to avoid overcrowding, or keep it if scroll/space allows */}
-                    {publicLinks.slice(0, 4).map(link => renderLink(link, true))}
-                    {renderInstagramLink(true)}
-                    {renderFacebookLink(true)}
-                    {isAuthenticated && (
+                <nav className="fixed bottom-0 left-0 w-full h-18 bg-background/95 backdrop-blur-xl border-t border-white/5 z-50 flex items-center justify-around px-2 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] pb-safe">
+                    {publicLinks.slice(0, 3).map(link => renderLink(link, true))}
+                    {renderSocialLink(Instagram, 'Instagram', 'https://www.instagram.com/paso.xti', 'group-hover:text-pink-500', true)}
+                    {isAuthenticated ? (
                          <button
                             onClick={() => setShowMobileAdminMenu(!showMobileAdminMenu)}
                             className={cn(
                                 "flex flex-col items-center justify-center p-1 text-[10px] flex-1 h-full gap-1 rounded-lg transition-all duration-300 active:scale-95",
                                 showMobileAdminMenu 
-                                    ? "text-brand-red bg-brand-red/10 shadow-[0_0_15px_-5px_rgba(255,15,75,0.5)] border border-brand-red/20"
-                                    : "text-brand-red hover:bg-secondary"
+                                    ? "text-brand-red bg-brand-red/10 border border-brand-red/20 shadow-[0_0_15px_-5px_rgba(255,15,75,0.5)]"
+                                    : "text-brand-red font-bold"
                             )}
                          >
                              <Settings className={cn("h-6 w-6", showMobileAdminMenu && "animate-spin-slow")} />
-                             <span>Admin</span>
+                             <span className="uppercase font-black text-[8px] tracking-tighter">Admin</span>
                          </button>
+                    ) : (
+                      renderLink(publicLinks[publicLinks.length - 1], true)
                     )}
                 </nav>
             </>
@@ -192,56 +206,67 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
 
     return (
         <aside className={cn(
-            "fixed top-0 left-0 h-full bg-background/60 backdrop-blur-xl border-r border-border flex flex-col transition-all duration-300 z-20",
-            isCollapsed ? "w-20" : "w-64"
+            "fixed top-0 left-0 h-full bg-background/80 backdrop-blur-2xl border-r border-white/5 flex flex-col transition-all duration-500 z-20 shadow-[10px_0_40px_rgba(0,0,0,0.3)]",
+            isCollapsed ? "w-22" : "w-68"
         )}>
-            <div className="flex flex-col items-center justify-center h-24 border-b border-border px-2 relative overflow-hidden flex-shrink-0">
-                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,255,96,0.15),transparent_70%)] animate-pulse pointer-events-none"></div>
+            {/* LOGO SECTION */}
+            <div className="flex flex-col items-center justify-center h-28 px-4 relative overflow-hidden flex-shrink-0 border-b border-white/5">
+                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(10,255,96,0.1),transparent_70%)] animate-pulse pointer-events-none"></div>
                  
-                 <div className={cn("relative z-10 transition-all duration-300", isCollapsed ? "h-12 w-12" : "h-16 w-16 flex items-center gap-2")}>
-                    <Logo className="w-full h-full" />
+                 <div className={cn("relative z-10 transition-all duration-500 flex items-center gap-3", isCollapsed ? "h-14 w-14" : "w-full justify-start")}>
+                    <Logo className={cn("transition-all", isCollapsed ? "w-14 h-14" : "w-12 h-12")} />
                     {!isCollapsed && (
-                        <div className="flex flex-col justify-center">
-                            <h1 className="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-foreground to-brand-green drop-shadow-[0_0_5px_rgba(10,255,96,0.5)]">
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-black tracking-tighter text-foreground drop-shadow-[0_0_10px_rgba(10,255,96,0.2)]">
                                 P.A.S.O.
                             </h1>
+                            <span className="text-[8px] font-mono text-brand-green/60 uppercase tracking-[0.3em] -mt-1">Campaign Hub</span>
                         </div>
                     )}
                  </div>
             </div>
             
-            <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-                <div className="mb-2 px-3">
-                    <span className={cn("text-[9px] font-bold text-muted-foreground/40 uppercase tracking-[0.2em]", isCollapsed && "hidden")}>
-                        Protocolos
-                    </span>
-                </div>
-                {publicLinks.map(l => renderLink(l, false))}
+            {/* NAVIGATION LINKS */}
+            <nav className="flex-1 px-3 py-6 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                 
-                <div className="my-4 border-t border-border/50 relative">
-                    <span className={cn("absolute -top-3 left-4 bg-background/80 px-2 text-[9px] text-muted-foreground/50 font-mono uppercase tracking-widest", isCollapsed && "hidden")}>
-                        Social
-                    </span>
+                <SectionHeader label="Operaciones" />
+                <div className="space-y-1">
+                  {publicLinks.map(l => renderLink(l, false))}
                 </div>
-                {renderInstagramLink(false)}
-                {renderFacebookLink(false)}
+                
+                <SectionHeader label="Escucha" />
+                <div className="space-y-1">
+                  {renderSocialLink(Instagram, 'Instagram', 'https://www.instagram.com/paso.xti', 'group-hover:text-pink-500 group-hover:drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]', false)}
+                  {renderSocialLink(Facebook, 'Facebook', 'https://www.facebook.com/profile.php?id=61585934602862', 'group-hover:text-blue-500 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]', false)}
+                </div>
                 
                 {isAuthenticated && (
                     <>
-                        <div className="my-4 border-t border-border relative">
-                            <span className={cn("absolute -top-3 left-4 bg-background px-2 text-[10px] text-muted-foreground/50 font-mono uppercase tracking-widest", isCollapsed && "hidden")}>
-                                Core System
-                            </span>
+                        <SectionHeader label="Mando" />
+                        <div className="space-y-1">
+                          {adminLinks.map(l => renderLink(l, false))}
                         </div>
-                        {adminLinks.map(l => renderLink(l, false))}
                     </>
                 )}
             </nav>
             
-            <div className="p-4 border-t border-border bg-secondary/10">
+            {/* FOOTER SECTION */}
+            <div className="p-4 mt-auto space-y-3 bg-white/[0.02] border-t border-white/5">
+                {!isCollapsed && (
+                  <div className="px-2 py-3 mb-2 rounded-xl bg-black/40 border border-white/5 flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-lg bg-brand-green/10 flex items-center justify-center text-brand-green">
+                      <ShieldCheck className="h-4 w-4" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black text-foreground uppercase tracking-widest">Protocolo</span>
+                      <span className="text-[8px] font-mono text-brand-green/60 uppercase">Activo v1.0.4</span>
+                    </div>
+                  </div>
+                )}
+
                 <button 
                     onClick={() => setCollapsed(!isCollapsed)} 
-                    className="w-full flex items-center justify-center p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                    className="w-full flex items-center justify-center p-3 rounded-xl text-muted-foreground hover:text-brand-green hover:bg-brand-green/10 border border-transparent hover:border-brand-green/20 transition-all active:scale-95 shadow-inner"
                 >
                     {isCollapsed ? <ChevronsRight className="h-5 w-5" /> : <ChevronsLeft className="h-5 w-5" />}
                 </button>
