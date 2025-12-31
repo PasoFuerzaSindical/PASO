@@ -6,7 +6,7 @@ import {
   Bot, GalleryVertical, BookCheck, ChevronsLeft, ChevronsRight, 
   Palette, Medal, Users2, BrainCircuit, Star, BookHeart, 
   Settings, FileEdit, Sparkles, Home, Gamepad2, X, Swords, 
-  Instagram, Facebook, StickyNote, Activity, ShieldCheck, Radio
+  Instagram, Facebook, StickyNote, Activity, ShieldCheck
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
@@ -25,7 +25,6 @@ const publicLinks = [
 
 const adminLinks = [
   { to: '/dashboard', icon: LayoutDashboard, text: 'Dashboard' },
-  { to: '/radio-admin', icon: Radio, text: 'Frecuencias' },
   { to: '/muro-admin', icon: StickyNote, text: 'Muro Admin' },
   { to: '/acronym-generator', icon: Sparkles, text: 'Generador' },
   { to: '/script-generator', icon: Bot, text: 'Contenido' },

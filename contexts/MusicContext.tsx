@@ -28,8 +28,8 @@ const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
 const DEFAULT_PLAYLISTS: Record<string, Track[]> = {
   Llegada: [
-    { title: "Señal Estelar", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-    { title: "Viento Solar", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" }
+    { title: "Transmisión P.A.S.O. 01", url: "https://drive.google.com/uc?export=download&id=1HKn8vcS2kH5LcYOsQF8WpyCwx4E6iqlL" },
+    { title: "Transmisión P.A.S.O. 02", url: "https://drive.google.com/uc?export=download&id=1nT2iiVSe_GLeGeYD8l-agiHYCpSF73pd" }
   ],
   Observacion: [
     { title: "Escáner de Campo", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
@@ -57,31 +57,42 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const currentPlaylist = playlists[campaignPhase] || [];
   const currentTrack = currentPlaylist[currentTrackIndex] || null;
 
+  // Inicialización del elemento de audio
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio();
-      audioRef.current.crossOrigin = "anonymous"; // Intentar evitar problemas de CORS
+      // No usamos crossOrigin para evitar problemas con Drive si no hay cabeceras CORS
     }
     const audio = audioRef.current;
     
     const handleEnded = () => {
-      setCurrentTrackIndex((prev) => (prev + 1) % currentPlaylist.length);
+      setCurrentTrackIndex((prev) => (prev + 1) % (currentPlaylist.length || 1));
     };
 
-    const handleLoadStart = () => setIsLoading(true);
+    const handleLoadStart = () => {
+        setIsLoading(true);
+        setError(null);
+    };
+
     const handleCanPlay = () => {
         setIsLoading(false);
         setError(null);
     };
-    const handleAudioError = (e: any) => {
+
+    const handleAudioError = () => {
         setIsLoading(false);
-        const errorCode = audio.error?.code;
-        if (errorCode === 4) setError("Formato no soportado o Link roto");
-        else if (errorCode === 3) setError("Error de decodificación");
-        else if (errorCode === 2) setError("Error de red");
-        else if (errorCode === 1) setError("Carga abortada");
-        else setError("Error de acceso (¿Es público el Drive?)");
-        console.error("Audio Engine Error:", audio.error);
+        const err = audio.error;
+        if (err) {
+            // Corregimos el log para evitar [object Object]
+            const errorMsg = `Audio Error (Code ${err.code}): ${err.message || 'Source not supported'}`;
+            console.error(errorMsg);
+            
+            if (err.code === 4) setError("Señal bloqueada: ¿Drive es público?");
+            else if (err.code === 2) setError("Fallo de red: Sin conexión");
+            else setError(`Error ${err.code}: Fallo de señal`);
+        } else {
+            setError("Error desconocido en la frecuencia");
+        }
     };
 
     audio.addEventListener('ended', handleEnded);
@@ -97,43 +108,51 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
   }, [currentPlaylist]);
 
+  // Manejo de cambio de pista (Fuente)
   useEffect(() => {
-    if (audioRef.current && currentTrack) {
-      setError(null);
-      audioRef.current.src = currentTrack.url;
-      audioRef.current.load();
-      
-      if (isPlaying && !isMuted && hasInteracted) {
-        audioRef.current.play().catch(() => {
-          // Si falla aquí suele ser por falta de interacción del usuario
-        });
+    const audio = audioRef.current;
+    if (audio && currentTrack) {
+      const targetUrl = currentTrack.url;
+      // Solo cargamos si la URL es realmente distinta
+      if (audio.src !== targetUrl) {
+          setError(null);
+          audio.src = targetUrl;
+          audio.load();
       }
     }
-  }, [currentTrack, hasInteracted]);
+  }, [currentTrack]);
 
+  // Manejo de Play/Pause/Mute
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume;
-      audioRef.current.muted = isMuted;
+    const audio = audioRef.current;
+    if (!audio) return;
 
-      if (isPlaying && !isMuted && hasInteracted) {
-        audioRef.current.play().catch(e => {
-          setIsPlaying(false);
+    audio.volume = volume;
+    audio.muted = isMuted;
+
+    if (isPlaying && hasInteracted && !isMuted) {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(e => {
+          console.warn("Reproducción diferida:", e.message);
+          // No seteamos error aquí porque puede ser solo un bloqueo de autoplay temporal
         });
-      } else {
-        audioRef.current.pause();
       }
+    } else {
+      audio.pause();
     }
   }, [isPlaying, isMuted, volume, hasInteracted]);
 
+  // Resetear al cambiar de fase
   useEffect(() => {
     setCurrentTrackIndex(0);
+    setError(null);
   }, [campaignPhase]);
 
   const togglePlay = () => {
     if (!hasInteracted) setHasInteracted(true);
     setIsMuted(false);
-    setIsPlaying(!isPlaying);
+    setIsPlaying(prev => !prev);
   };
 
   const updatePlaylist = (phase: string, newTracks: Track[]) => {
