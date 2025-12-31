@@ -5,7 +5,7 @@ import { Button } from '../components/ui/Button';
 import { Textarea } from '../components/ui/Textarea';
 import { RealityPost } from '../lib/types';
 import useLocalStorage from '../hooks/useLocalStorage';
-import { Coffee, Zap, Heart, Share2, MessageSquarePlus, Download, X, ShieldAlert } from 'lucide-react';
+import { Coffee, Zap, Heart, Share2, MessageSquarePlus, Download, X, ShieldAlert, Square, Smartphone } from 'lucide-react';
 import { cn } from '../lib/utils';
 // @ts-ignore
 import * as htmlToImage from 'html-to-image';
@@ -31,12 +31,15 @@ const getStableAcronym = (id: string) => {
     return PASO_DICTIONARY[index];
 };
 
+type AspectRatio = '9:16' | '4:5';
+
 const RealityWallPage: React.FC = () => {
     const { campaignPhase } = useCampaign();
     const [posts, setPosts] = useLocalStorage<RealityPost[]>('reality-wall-posts', []);
     const [newPost, setNewPost] = useState('');
     const [isPosting, setIsPosting] = useState(false);
     const [sharingPost, setSharingPost] = useState<RealityPost | null>(null);
+    const [selectedRatio, setSelectedRatio] = useState<AspectRatio>('9:16');
     
     // Defaulting to user's provided webhook
     const [webhookUrl] = useLocalStorage<string>('paso-webhook-url', 'https://discord.com/api/webhooks/1455616560440938744/4sG3-kIsF6blUl001FNCJmBb8dIaBPDDQHOK73k8qJUbFZdfnW8CU0OtYC2G7_sw8nX_');
@@ -80,7 +83,7 @@ const RealityWallPage: React.FC = () => {
                 backgroundColor: '#050505'
             });
             const link = document.createElement('a');
-            link.download = `paso-realidad-${sharingPost?.id}.png`;
+            link.download = `paso-realidad-${selectedRatio.replace(':', '-')}-${sharingPost?.id}.png`;
             link.href = dataUrl;
             link.click();
             setSharingPost(null);
@@ -178,7 +181,7 @@ const RealityWallPage: React.FC = () => {
                                     size="icon" 
                                     className="h-8 w-8 text-muted-foreground hover:text-brand-green hover:bg-brand-green/10 rounded-full"
                                     onClick={() => setSharingPost(post)}
-                                    title="Generar Story"
+                                    title="Generar Story/Post"
                                 >
                                     <Share2 className="h-4 w-4" />
                                 </Button>
@@ -198,67 +201,100 @@ const RealityWallPage: React.FC = () => {
                     </div>
 
                     <div className="flex flex-col items-center gap-6 max-w-full animate-in zoom-in-95 duration-300">
-                        {/* Story View (9:16) */}
+                        
+                        {/* Format Selector Toggle */}
+                        <div className="bg-white/5 p-1 rounded-xl border border-white/10 flex gap-1">
+                            <Button 
+                                variant={selectedRatio === '9:16' ? 'default' : 'ghost'} 
+                                size="sm" 
+                                className={cn("h-10 px-4 rounded-lg flex items-center gap-2", selectedRatio === '9:16' ? "bg-brand-green text-black" : "text-white/60")}
+                                onClick={() => setSelectedRatio('9:16')}
+                            >
+                                <Smartphone className="h-4 w-4" />
+                                <span className="text-[10px] font-black uppercase tracking-tighter">Story (9:16)</span>
+                            </Button>
+                            <Button 
+                                variant={selectedRatio === '4:5' ? 'default' : 'ghost'} 
+                                size="sm" 
+                                className={cn("h-10 px-4 rounded-lg flex items-center gap-2", selectedRatio === '4:5' ? "bg-brand-green text-black" : "text-white/60")}
+                                onClick={() => setSelectedRatio('4:5')}
+                            >
+                                <Square className="h-4 w-4" />
+                                <span className="text-[10px] font-black uppercase tracking-tighter">Feed (4:5)</span>
+                            </Button>
+                        </div>
+
+                        {/* Story View (Dynamic Dimensions) */}
                         <div 
                             ref={storyRef}
-                            className="w-[360px] h-[640px] bg-[#050505] relative overflow-hidden flex flex-col p-10 justify-center text-center shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+                            style={{ 
+                                width: '360px', 
+                                height: selectedRatio === '9:16' ? '640px' : '450px' 
+                            }}
+                            className="bg-[#050505] relative overflow-hidden flex flex-col p-8 md:p-10 justify-between text-center shadow-[0_0_50px_rgba(0,0,0,0.5)] transition-all duration-500 ease-in-out"
                         >
                             <div className="absolute top-[-10%] left-[-10%] w-[140%] h-[140%] bg-[radial-gradient(circle_at_center,rgba(10,255,96,0.12),transparent_70%)] pointer-events-none"></div>
                             <div className="absolute inset-4 border border-brand-green/20 pointer-events-none"></div>
                             <div className="absolute inset-0 border-[12px] border-[#050505] z-20 pointer-events-none"></div>
                             
-                            <div className="absolute top-12 left-0 w-full flex justify-center opacity-40">
-                                <Logo className="h-20 w-20" animated={false} />
+                            {/* Logo Top - Less space on 4:5 */}
+                            <div className={cn("relative z-10 flex justify-center opacity-40", selectedRatio === '4:5' ? "mt-2" : "mt-4")}>
+                                <Logo className={selectedRatio === '4:5' ? "h-14 w-14" : "h-20 w-20"} animated={false} />
                             </div>
 
-                            <div className="relative z-10 space-y-10 px-4">
+                            {/* Message Center */}
+                            <div className="relative z-10 space-y-6 md:space-y-8 px-4 flex-1 flex flex-col justify-center">
                                 <div className="space-y-2">
                                     <div className="h-px w-12 bg-brand-green mx-auto opacity-50"></div>
-                                    <span className="text-brand-green font-mono text-[10px] tracking-[0.5em] uppercase">VEREDICTO PASO</span>
+                                    <span className="text-brand-green font-mono text-[9px] tracking-[0.4em] uppercase">VEREDICTO PASO</span>
                                     <div className="h-px w-12 bg-brand-green mx-auto opacity-50"></div>
                                 </div>
                                 
                                 <div className="space-y-4">
-                                    <h2 className="text-3xl font-black italic tracking-tighter text-white leading-[1.1] drop-shadow-2xl uppercase">
+                                    <h2 className={cn(
+                                        "font-black italic tracking-tighter text-white leading-[1.1] drop-shadow-2xl uppercase",
+                                        selectedRatio === '4:5' ? "text-2xl" : "text-3xl"
+                                    )}>
                                         "{sharingPost.text}"
                                     </h2>
-                                    <p className="text-brand-green font-mono text-xs font-bold bg-brand-green/10 py-2 px-4 border border-brand-green/30 inline-block rounded uppercase tracking-tighter">
+                                    <p className="text-brand-green font-mono text-[10px] font-bold bg-brand-green/10 py-1.5 px-3 border border-brand-green/30 inline-block rounded uppercase tracking-tighter">
                                         {getStableAcronym(sharingPost.id)}
                                     </p>
                                 </div>
                                 
-                                <div className="flex justify-center gap-4 opacity-70 scale-90 pt-4">
+                                <div className="flex justify-center gap-4 opacity-70 scale-90 pt-2">
                                     <div className="flex items-center gap-1 text-white font-bold text-xs"><Coffee className="h-4 w-4 text-orange-400"/> {sharingPost.reactions.cafe}</div>
                                     <div className="flex items-center gap-1 text-white font-bold text-xs"><Zap className="h-4 w-4 text-brand-red"/> {sharingPost.reactions.hartazgo}</div>
                                     <div className="flex items-center gap-1 text-white font-bold text-xs"><Heart className="h-4 w-4 text-brand-green"/> {sharingPost.reactions.apoyo}</div>
                                 </div>
                             </div>
 
-                            <div className="absolute bottom-12 left-0 w-full px-10 flex flex-col items-center gap-4">
+                            {/* Footer Area - Tighter on 4:5 */}
+                            <div className={cn("relative z-10 w-full px-4 flex flex-col items-center gap-4", selectedRatio === '4:5' ? "mb-2" : "mb-4")}>
                                 <div className="space-y-2 flex flex-col items-center">
-                                    <p className="text-white/40 font-mono text-[9px] tracking-[0.2em] uppercase">Escanea para alzar la voz</p>
-                                    <div className="p-2.5 bg-white rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                                    <p className="text-white/40 font-mono text-[8px] tracking-[0.2em] uppercase">Escanea para alzar la voz</p>
+                                    <div className="p-2 bg-white rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.1)]">
                                          <img 
                                             src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(appUrl)}&color=050505`} 
                                             alt="QR" 
-                                            className="w-14 h-14" 
+                                            className={selectedRatio === '4:5' ? "w-10 h-10" : "w-14 h-14"}
                                         />
                                     </div>
                                 </div>
                                 
-                                <div className="space-y-1">
-                                    <p className="text-brand-green font-black text-2xl tracking-tighter drop-shadow-[0_0_10px_rgba(10,255,96,0.3)]">P.A.S.O.</p>
-                                    <p className="text-white/40 text-[8px] font-mono leading-tight tracking-wider px-4">SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO</p>
+                                <div className="space-y-0.5">
+                                    <p className={cn("text-brand-green font-black tracking-tighter drop-shadow-[0_0_10px_rgba(10,255,96,0.3)]", selectedRatio === '4:5' ? "text-xl" : "text-2xl")}>P.A.S.O.</p>
+                                    <p className="text-white/40 text-[7px] font-mono leading-tight tracking-wider px-2">SI PASAS DE TODO, P.A.S.O. ES TU SINDICATO</p>
                                     {campaignPhase === 'Revelacion' && (
-                                        <p className="text-brand-red font-black text-[9px] mt-2 tracking-widest border border-brand-red/30 py-1 px-2 inline-block uppercase">UNA INICIATIVA DE UGT SANIDAD</p>
+                                        <p className="text-brand-red font-black text-[8px] mt-1 tracking-widest border border-brand-red/30 py-0.5 px-2 inline-block uppercase">UNA INICIATIVA DE UGT SANIDAD</p>
                                     )}
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex flex-col gap-3 w-full">
+                        <div className="flex flex-col gap-3 w-full min-w-[320px]">
                             <Button size="lg" onClick={downloadStory} className="bg-brand-green text-black font-black w-full h-14 text-lg shadow-[0_10px_30px_rgba(10,255,96,0.3)] hover:scale-[1.02] transition-transform">
-                                <Download className="mr-2 h-6 w-6" /> DESCARGAR IMAGEN
+                                <Download className="mr-2 h-6 w-6" /> DESCARGAR PARA {selectedRatio === '9:16' ? 'STORY' : 'FEED'}
                             </Button>
                         </div>
                     </div>
