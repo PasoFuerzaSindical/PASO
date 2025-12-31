@@ -25,7 +25,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, pageTitle }) => {
 
   return (
     <div className="h-screen bg-background text-foreground overflow-hidden relative selection:bg-brand-green/30 selection:text-brand-green transition-colors duration-300">
-      {/* Global CRT Overlay - Managed by CSS (hidden in light mode) */}
+      {/* Global CRT Overlay */}
       <div className="crt-lines"></div>
       
       <Sidebar isCollapsed={isSidebarCollapsed} setCollapsed={handleSetCollapsed} />
@@ -35,7 +35,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, pageTitle }) => {
           isMobile ? "ml-0 pb-16" : (isSidebarCollapsed ? "ml-20" : "ml-64")
         )}>
         <Header pageTitle={pageTitle} />
-        {/* Main content area takes remaining height */}
+        {/* Main content area */}
         <main className="flex-1 p-2 lg:p-4 overflow-y-auto overflow-x-hidden w-full scrollbar-thin flex flex-col">
           {children}
         </main>
