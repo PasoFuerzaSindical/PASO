@@ -235,7 +235,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                 
                 <SectionHeader label="Escucha" />
                 <div className="space-y-1">
-                  {renderSocialLink(Instagram, 'Instagram', 'https://www.instagram.com/paso.xti', 'group-hover:text-pink-500 group-hover:drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]', false)}
+                  {renderSocialLink(Instagram, 'Instagram', 'https://www.instagram.com/paso_fuerzasindical', 'group-hover:text-pink-500 group-hover:drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]', false)}
                   {renderSocialLink(Facebook, 'Facebook', 'https://www.facebook.com/profile.php?id=61585934602862', 'group-hover:text-blue-500 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]', false)}
                 </div>
                 
