@@ -4,13 +4,31 @@ import { useNavigate } from 'react-router-dom';
 import Heartbeat from '../components/ui/Heartbeat';
 import CyberBackground from '../components/ui/CyberBackground';
 import Logo from '../components/ui/Logo';
-import { BrainCircuit, Siren, Stethoscope, Microscope, Activity, Radio, Terminal, Eye, Gamepad2, Swords } from 'lucide-react';
+import { BrainCircuit, Siren, Stethoscope, Microscope, Activity, Radio, Terminal, Eye, Gamepad2, Swords, StickyNote } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   const tools = [
+    {
+      title: "Entrenamiento de Negociación",
+      subtitle: "Simulador de Sistemas",
+      icon: Gamepad2,
+      descMedical: "Entorno controlado para el manejo de burocracia hostil.",
+      
+      secretTitle: "BOSS BATTLE",
+      secretMsg: "DERROTA A DON BUROCRACIO",
+      secretIcon: Swords,
+      
+      path: "/simulator",
+      color: "text-cyber-violet",
+      hoverColor: "group-hover:text-cyber-violet",
+      borderColor: "group-hover:border-cyber-violet",
+      glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(185,87,206,0.4)]",
+      delay: "0ms",
+      specialBorder: "border-l-4 border-l-cyber-violet"
+    },
     {
       title: "Tratamiento Paliativo",
       subtitle: "Protocolo de Descompresión",
@@ -46,6 +64,23 @@ const LandingPage: React.FC = () => {
       delay: "200ms"
     },
     {
+      title: "Monitor de Incidencias",
+      subtitle: "Muro de la Realidad",
+      icon: StickyNote,
+      descMedical: "Registro público de anomalías sistémicas no reportadas.",
+
+      secretTitle: "MURO DE LA REALIDAD",
+      secretMsg: "ALZA TU VOZ, SIN MIEDO",
+      secretIcon: Activity,
+
+      path: "/muro",
+      color: "text-orange-400",
+      hoverColor: "group-hover:text-orange-400",
+      borderColor: "group-hover:border-orange-400",
+      glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(251,146,60,0.4)]",
+      delay: "300ms"
+    },
+    {
       title: "Diagnóstico de Realidad",
       subtitle: "Análisis de Acrónimos",
       icon: Microscope,
@@ -60,7 +95,7 @@ const LandingPage: React.FC = () => {
       hoverColor: "group-hover:text-blue-400",
       borderColor: "group-hover:border-blue-400",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(96,165,250,0.4)]",
-      delay: "300ms"
+      delay: "400ms"
     },
     {
       title: "Bioética del Sistema",
@@ -77,7 +112,7 @@ const LandingPage: React.FC = () => {
       hoverColor: "group-hover:text-yellow-400",
       borderColor: "group-hover:border-yellow-400",
       glowColor: "group-hover:shadow-[0_0_30px_-5px_rgba(250,204,21,0.4)]",
-      delay: "400ms"
+      delay: "500ms"
     }
   ];
 
@@ -112,83 +147,44 @@ const LandingPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="relative z-10 container mx-auto max-w-6xl px-4 pb-8 w-full flex-1 flex flex-col justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-6">
+      <div className="relative z-10 container mx-auto max-w-6xl px-4 pb-12 w-full flex-1 flex flex-col justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
           
-          {/* SIMULATOR CARD - NOW FIRST AND SPANNING 2 COLUMNS */}
-          <div 
-                onClick={() => navigate('/simulator')}
-                className="group relative h-40 sm:h-48 md:h-56 cursor-pointer overflow-hidden rounded-xl bg-secondary/20 border border-white/5 backdrop-blur-sm transition-all duration-500 md:col-span-2 hover:border-cyber-violet group-hover:shadow-[0_0_40px_-5px_rgba(185,87,206,0.5)] border-l-4 border-l-cyber-violet"
-                style={{ animationDelay: "0ms" }}
-            >
-                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:blur-sm">
-                    <div className="flex items-start justify-between">
-                        <div className="p-1.5 md:p-2 rounded-md bg-white/5 text-cyber-violet">
-                            <Gamepad2 className="h-6 w-6 md:h-8 md:w-8" />
-                        </div>
-                        <div className="flex flex-col items-end">
-                            <span className="text-[9px] md:text-[10px] font-mono text-muted-foreground/50 border border-white/10 px-2 py-0.5 rounded mb-1">
-                               SIM_TRAINING_v4.2
-                            </span>
-                            <span className="text-[10px] text-cyber-violet animate-pulse font-bold uppercase tracking-tighter">Acceso Prioritario</span>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 className="text-xl md:text-3xl font-black text-foreground/90 leading-tight uppercase tracking-tight">Entrenamiento de Negociación</h3>
-                        <p className="text-sm md:text-base text-muted-foreground mt-1 leading-tight font-light">Enfréntate al Sistema en un entorno controlado antes del turno real.</p>
-                    </div>
-                 </div>
-
-                 <div className="absolute inset-0 p-4 md:p-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/90 z-10">
-                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-                     <div className="flex items-center gap-4 md:gap-8">
-                        <Swords className="h-10 w-10 md:h-16 md:w-16 text-cyber-violet animate-pulse" />
-                        <div className="text-left">
-                             <h3 className="text-3xl md:text-5xl font-black tracking-widest uppercase glitch-text text-cyber-violet" data-text="BOSS BATTLE">
-                                BOSS BATTLE
-                            </h3>
-                            <p className="text-xs md:text-sm font-mono text-white/80 border-l-2 border-cyber-violet pl-4 py-1">
-                                DERROTA A DON BUROCRACIO. <br className="hidden md:block" />
-                                CONSIGUE TUS DERECHOS.
-                            </p>
-                        </div>
-                     </div>
-                 </div>
-            </div>
-
-          {/* OTHER TOOLS */}
           {tools.map((tool, index) => (
             <div 
                 key={index}
                 onClick={() => navigate(tool.path)}
                 className={cn(
-                    "group relative h-32 sm:h-40 md:h-48 cursor-pointer overflow-hidden rounded-xl bg-secondary/20 border border-white/5 backdrop-blur-sm transition-all duration-500",
+                    "group relative h-40 sm:h-48 md:h-52 cursor-pointer overflow-hidden rounded-xl bg-secondary/20 border border-white/5 backdrop-blur-sm transition-all duration-500",
                     tool.borderColor,
                     tool.glowColor,
+                    tool.specialBorder,
                     "hover:border-opacity-50 hover:bg-secondary/40"
                 )}
                 style={{ animationDelay: tool.delay }}
             >
+                {/* Regular View */}
                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-between transition-all duration-300 group-hover:opacity-0 group-hover:scale-95 group-hover:blur-sm">
                     <div className="flex items-start justify-between">
                         <div className={cn("p-1.5 md:p-2 rounded-md bg-white/5", tool.color)}>
-                            <tool.icon className="h-5 w-5 md:h-6 md:w-6" />
+                            <tool.icon className="h-6 w-6" />
                         </div>
                         <span className="text-[9px] md:text-[10px] font-mono text-muted-foreground/50 border border-white/10 px-2 py-0.5 rounded">
                            PROT_0{index + 1}
                         </span>
                     </div>
                     <div>
-                        <h3 className="text-lg md:text-xl font-bold text-foreground/90 leading-tight">{tool.title}</h3>
-                        <p className="text-xs md:text-sm text-muted-foreground mt-1 leading-tight">{tool.subtitle}</p>
+                        <h3 className="text-lg md:text-xl font-black text-foreground/90 leading-tight uppercase tracking-tight">{tool.title}</h3>
+                        <p className="text-xs md:text-sm text-muted-foreground mt-1 leading-tight font-light">{tool.subtitle}</p>
                     </div>
                     <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-muted-foreground/20 to-transparent opacity-50"></div>
                 </div>
 
+                {/* Secret View (Hover) */}
                 <div className="absolute inset-0 p-4 md:p-6 flex flex-col items-center justify-center text-center opacity-0 group-hover:opacity-100 transition-all duration-300 bg-black/80 z-10">
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
                     
-                    <tool.secretIcon className={cn("h-8 w-8 md:h-10 md:w-10 mb-2 md:mb-3 animate-pulse", tool.hoverColor)} />
+                    <tool.secretIcon className={cn("h-10 w-10 mb-3 animate-pulse", tool.hoverColor)} />
                     
                     <h3 className={cn("text-xl md:text-2xl font-black tracking-widest uppercase glitch-text leading-tight", tool.hoverColor)} data-text={tool.secretTitle}>
                         {tool.secretTitle}
