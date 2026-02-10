@@ -180,8 +180,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
 
                 {/* Mobile Bottom Navigation */}
                 <nav className="fixed bottom-0 left-0 w-full h-18 bg-background/95 backdrop-blur-xl border-t border-white/5 z-50 flex items-center justify-around px-2 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] pb-safe">
-                    {publicLinks.slice(0, 3).map(link => renderLink(link, true))}
-                    {renderSocialLink(Instagram, 'Instagram', 'https://www.instagram.com/paso_fuerzasindical', 'group-hover:text-pink-500', true)}
+                    {/* Inicio, Consultorio y Bingo fijos en móvil */}
+                    {renderLink(publicLinks[0], true)} {/* Inicio */}
+                    {renderLink(publicLinks[4], true)} {/* Consultorio */}
+                    {renderLink(publicLinks[3], true)} {/* Bingo */}
+                    
+                    {/* Botón de Instagram (público) o Botón Admin (si logueado) */}
                     {isAuthenticated ? (
                          <button
                             onClick={() => setShowMobileAdminMenu(!showMobileAdminMenu)}
@@ -196,7 +200,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setCollapsed }) => {
                              <span className="uppercase font-black text-[8px] tracking-tighter">Admin</span>
                          </button>
                     ) : (
-                      renderLink(publicLinks[publicLinks.length - 1], true)
+                      renderSocialLink(Instagram, 'Instagram', 'https://www.instagram.com/paso_fuerzasindical', 'group-hover:text-pink-500', true)
                     )}
                 </nav>
             </>
